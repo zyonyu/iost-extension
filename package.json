@@ -6,6 +6,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "start": "webpack --config webpack.config.dev.js",
+    "dev": "npm run watch-dev",
     "watch-dev": "webpack --config webpack.config.dev.js --watch",
     "build": "npm run clean && webpack --config webpack.config.prod.js"
   },
