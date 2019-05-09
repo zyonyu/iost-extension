@@ -1,0 +1,32 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.agreement-container{
+  height: 100vh;
+  background-color: @gray;
+
+  .agreement-box{
+    background-color: @white;
+    margin-top: 10px;
+    padding: 10px 20px;
+    p {
+      margin: 10px 0;
+      line-height: 1.4;
+      &.space {
+        padding-left: 20px;
+      }
+    }
+    h2 {
+      text-align: center;
+    }
+    h3 {
+      margin: 10px 0;
+    }
+    ul {
+      padding-left: 40px;
+      li {
+        list-style: disc;
+      }
+    }
+  }
+}

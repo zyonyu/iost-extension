@@ -1,0 +1,80 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.home-container{
+  height: 100vh;
+  background-color: @gray;
+  .account-current-box{
+    cursor: pointer;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .account-box{
+    padding-top: 30px;
+  }
+  .account-list{
+    position: absolute;
+    width: 280px;
+    .radius(4px);
+    background-color: @gray;
+    overflow: auto;
+    border: 1px solid #C4C4C4;
+    max-height: 300px;
+    display: none;
+    &.active{
+      display: block;
+    }
+    .account-item{
+      display: flex;
+      align-items: center;
+      height: 50px;
+      padding: 0 25px;
+      cursor: pointer;
+      &:hover {
+        background-color: @white;
+      }
+      .title{
+        width: 110px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        color: @white;
+        background-color: #E28A1E;
+      }
+      .name{
+        font-size: 14px;
+        flex: 1;
+        text-align: center;
+      }
+      &.test{
+        .title{
+          background-color: @green;
+        }
+      }
+    }
+  }
+
+  .token-balance-box{
+    margin-bottom: 25px;
+    .logo-box{
+      text-align: center;
+      padding-top: 30px;
+    }
+    .amount-box{
+      text-align: center;
+      padding: 15px 0 10px;
+      span{
+        font-size: 22px;
+        display: inline-block;
+        &:first-child{
+          margin-right: 5px;
+        }
+        &:last-child{
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}

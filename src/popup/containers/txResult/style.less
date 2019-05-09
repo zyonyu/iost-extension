@@ -1,0 +1,68 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.tx-result-container{
+  height: 100vh;
+  background-color: @gray;
+  .tx-result-box{
+    text-align: center;
+    padding-top: 30px;
+  }
+  .logo-box{
+    margin-bottom: 10px;
+    p{
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 300;
+      margin-top: 10px;
+    }
+    &.success{
+      p{
+        color: #1AA757;
+      }
+    }
+    &.failed{
+      p{
+        color: @red;
+      }
+    }
+  }
+  .field-item{
+    font-size: 14px;
+    margin: 0 auto;
+    width: 300px;
+    p{
+      line-height: 16px;
+      text-align: left;
+      &:first-child{
+        font-weight: bold;
+        margin: 10px 0;
+      }
+      &:last-child{
+        min-height: 40px;
+        border: 1px solid #C4C4C4;
+        padding: 10px 15px;
+        .radius(4px);
+        line-height: 1.8;
+      }
+      &.error-info{
+        min-height: 70px;
+        overflow-y: auto;
+        color: @red;
+        max-height: 120px;
+      }
+      i{
+        vertical-align: middle;
+        margin-left: 5px;
+      }
+    }
+  }
+
+  .btn-close{
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    bottom: 30px;
+  }
+}

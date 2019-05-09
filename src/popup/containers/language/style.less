@@ -1,0 +1,26 @@
+
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.language-container{
+  height: 100vh;
+  background-color: @gray;
+  .language-box{
+    padding-top: 40px;
+    li{
+      display: flex;
+      align-items: center;
+      height: 80px;
+      padding-left: 40px;
+      cursor: pointer;
+      &:hover {
+        background-color: @white;
+      }
+      span{
+        font-size: 18px;
+        color: #333333;
+        margin-left: 20px;
+      }
+    }
+  }
+}

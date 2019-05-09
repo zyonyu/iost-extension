@@ -1,0 +1,53 @@
+
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.button-container{
+  width: 300px;
+  height: 40px;
+  background-color: #000000;
+  color: @white;
+  font-size: 16px;
+  cursor: pointer;
+  .radius(4px);
+  border: none;
+  transition: background-color 0.3s, color 0.3s;
+
+  &:hover {
+    background-color: rgba(#2B3338, .8);
+  }
+  
+
+}
+
+.btn-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  button, a{
+    width: 120px;
+    height: 40px;
+    background-color: @white;
+    color: @black;
+    border: 1px solid;
+    margin-left: 20px;
+    &:hover {
+      background-color: @black;
+      color: @white;
+    }
+    &:first-child{
+      margin-left: 0;
+    }
+  }
+  a{
+    font-size: 16px;
+    .radius(4px);
+    outline: 0;
+    text-align: center;
+    transition: background-color 300ms, color 300ms;
+    line-height: 40px;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,22 @@
+
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.input-container{
+  input{
+    width: 300px;
+    height: 40px;
+    color: #333333;
+    border: 1px solid #C4C4C4;
+    .radius(4px);
+    font-size: 14px;
+    padding: 0 15px;
+    // background-color: @gray;
+    &::-webkit-input-placeholder {
+      color: #B5B5B5;
+      font-size: 14px;
+      font-weight: 300;
+    }
+  }
+  margin-bottom: 15px;
+}

@@ -1,0 +1,26 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.resource-progress-container{
+  background-color: @white;
+  padding: 15px;
+  .radius(4px);
+  .top-box, .bottom-box{
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .progress-box{
+    background-color: #DCE6F2;
+    margin: 10px 0 5px;
+    .radius(5px);
+    .inner {
+      background-color: #6598F4;
+      height: 10px;
+      .radius(5px);
+    }
+  }
+  .bottom-box{
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,35 @@
+.text-overflow {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.box(@value: border-box){
+  box-sizing: @value;
+}
+
+.icon(@file-path, @width, @height){
+  background-image: url('@{file-path}');
+  background-size: cover;
+  display: inline-block;
+  width: @width;
+  height: @height;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.radius(@value){
+  border-radius: @value;
+}
+
+.shadow(@arguments: -4px 8px 20px 0px rgba(0, 0, 0, .1)){
+  box-shadow: @arguments;
+}
+
+.t-shadow(@arguments: 0 0 5px rgba(255,255,255,0.8)){
+  text-shadow: @arguments;
+}
+
+.uppercase(){
+  text-transform : uppercase;
+}

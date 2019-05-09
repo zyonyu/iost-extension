@@ -1,0 +1,89 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.gas-manage-container{
+  height: 100vh;
+  background-color: @gray;
+  .gas-manage-box{
+    padding: 15px;
+    overflow: auto;
+    height: calc(100vh - 60px);
+  }
+
+  .selling-gas{
+    margin: 15px 0;
+    padding: 15px;
+    background-color: @white;
+    .radius(4px);
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    display: none;
+    &.active{
+      display: flex;
+    }
+    span{
+      &:last-child{
+        color: #1E64E2;
+      }
+    }
+  }
+
+  .tabpane-box{
+    .field-box{
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      span{
+        &:last-child:not(:first-child){
+           color: #1E64E2;
+        }
+      }
+    }
+    .btn-submit{
+      margin: 20px 0 10px;
+      &:disabled{
+        cursor: not-allowed;
+      }
+    }
+    input{
+      background-color: #F6F6F6;
+    }
+  }
+
+  .pledg-records{
+    margin: 15px 0;
+    .title{
+      position: relative;
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 10px;
+      &:before{
+        content: '';
+        border-bottom: 1px solid #ddd;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 10px;
+        z-index: 1;
+      }
+      span{
+        padding: 0 5px;
+        position: relative;
+        z-index: 2;
+        background-color: #F6F6F6;
+      }
+    }
+    ul{
+      li{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "name": "iWallet",
+  "version": "0.2.0",
+  "manifest_version": 2,
+  "description": "Wallet Extension for IOST",
+  "icons": {
+    "16": "assets/icons/icon-16.png",
+    "128": "assets/icons/icon-128.png"
+  },
+  "default_locale": "en",
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "content/content.js"
+      ]
+    }
+  ],
+  "background": {
+    "scripts": [
+      "background/background.js"
+    ]
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "http://*/*",
+    "https://*/*"
+  ],
+  "browser_action": {
+    "default_icon": {
+      "19": "assets/icons/icon-19.png",
+      "38": "assets/icons/icon-38.png"
+    },
+    "default_title": "iWallet",
+    "default_popup": "popup/index.html"
+  },
+  "applications": {
+    "gecko": {
+      "id": "tonokim@qq.com"
+    }
+  },
+  "web_accessible_resources": [
+    "inject/inject.js"
+  ]
+}

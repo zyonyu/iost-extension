@@ -1,0 +1,29 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.changepwd-container{
+  height: 100vh;
+  background-color: @gray;
+  .changepwd-box{
+    position: relative;
+    text-align: center;
+    padding: 46px 0 0;
+  }
+  .approved, .verify-error{
+    width: 300px;
+    margin: 0 auto;
+    font-size: 14px;
+    font-weight: 300;
+    text-align: left;
+    color: #1AA757;
+  }
+  .verify-error {
+    color: red;
+  }
+  .btn-submit {
+    position: absolute;
+    top:470px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

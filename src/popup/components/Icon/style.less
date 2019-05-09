@@ -1,0 +1,193 @@
+
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.icon-logo{
+  .icon('/assets/imgs/logo.png', 24px, 30px);
+}
+
+.icon-home{
+  .icon('/assets/imgs/logo-home.png', 150px, 170px);
+}
+
+.icon-back{
+  .icon('/assets/imgs/arrow-left.png', 12px, 19px);
+  cursor: pointer;
+}
+
+.icon-checkbox{
+  display: inline-block;
+  margin-right: 5px;
+  margin-top: 1px;
+  width: 14px;
+  height: 14px;
+  background-repeat: no-repeat;
+  .radius(2px);
+  background-size: 10px 8px;
+  background-position: center center;
+  background-image: none;
+  border: 1px solid #979797;
+  cursor: pointer;
+  &.active{
+    border: 1px solid blue;
+    background-image: url('/assets/imgs/icon-checked.png');
+  }
+}
+
+.icon-circle{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #E28A1E;
+  margin-right: 8px;
+  &.green {
+    background-color: @green;
+  }
+}
+
+.icon-arrow{
+  width: 10px;
+  height: 8px;
+  cursor: pointer;
+  margin-left: 8px;
+  display: none;
+  &:before {
+    position: absolute;
+    content: '';
+    width: 8px;
+    height: 8px;
+    border: 1px solid #999999;
+    // transition: 0.3s all ease-in-out;
+  }
+  &.down {
+    display: inline-block;
+    &:before {
+      transform: translateY(-4px) rotateZ(45deg);
+      border-top-color: transparent;
+      border-left-color: transparent;
+    }
+  }
+  &.right {
+    display: inline-block;
+    &:before {
+      transform: translateY(-1px) rotateZ(45deg);
+      border-bottom-color: transparent;
+      border-left-color: transparent;
+    }
+  }
+}
+
+.icon-setting{
+  .icon('/assets/imgs/setting.png', 24px, 26px);
+  cursor: pointer;
+}
+
+.icon-check{
+  .icon('/assets/imgs/icon-checked-black.png', 10px, 8px);
+  background-image: none;
+  &.black{
+    background-image: url(/assets/imgs/icon-checked-black.png);
+  }
+}
+
+.icon-big-logo{
+  .icon('/assets/imgs/logo.png', 72px, 85px);
+}
+
+.icon-delete{
+  .icon('/assets/imgs/delete.png', 20px, 22px);
+  cursor: pointer;
+}
+
+.icon-copy{
+  .icon('/assets/imgs/copy.png', 15px, 19px);
+  cursor: pointer;
+}
+
+.icon-close{
+  .icon('/assets/imgs/icon-close.png', 20px, 20px);
+  cursor: pointer;
+}
+
+.icon-loading{
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-top:2px solid #F1F1F1;
+  border-left:2px solid #F1F1F1;
+  border-right:2px solid #F1F1F1;
+  border-bottom:2px solid #414141;
+  border-radius: 25px;
+  animation:rotate 1s infinite linear;
+}
+
+.icon-account{
+  .icon('/assets/imgs/account.png', 22px, 18px);
+}
+
+.icon-book{
+  .icon('/assets/imgs/book.png', 22px, 18px);
+}
+
+.icon-key{
+  .icon('/assets/imgs/key.png', 22px, 22px);
+}
+
+.icon-lock{
+  .icon('/assets/imgs/lock.png', 22px, 22px);
+}
+
+.icon-wallet{
+  .icon('/assets/imgs/wallet.png', 22px, 16px);
+}
+
+.icon-china{
+  .icon('/assets/imgs/flag-china.png', 25px, 17px);
+}
+
+.icon-english{
+  .icon('/assets/imgs/flag-english.png', 25px, 17px);
+}
+
+.icon-korea{
+  .icon('/assets/imgs/flag-korea.png', 25px, 17px);
+}
+
+.icon-agreement{
+  .icon('/assets/imgs/book.png', 25px, 20px);
+}
+
+.icon-success{
+  .icon('/assets/imgs/icon-success.png', 90px, 90px);
+}
+
+.icon-failed{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 90px;
+  height: 90px;
+  color: @white;
+  font-weight: bold;
+  font-family: serif;
+  font-size: 65px;
+  font-style: normal;
+  border-radius: 50%;
+  background-image: linear-gradient(#F17575, #AD1515);
+  &:before{
+    content: '!';
+  }
+}
+
+@keyframes rotate{
+  0%{
+    transform:rotate(0deg);
+  }
+  50%{
+    transform:rotate(180deg);
+  }
+  100%{
+    transform:rotate(360deg);
+  }
+}

@@ -1,0 +1,28 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.setting-container{
+  height: 100vh;
+  background-color: @gray;
+  .setting-list{
+    padding-top: 40px;
+    li{
+      display: flex;
+      align-items: center;
+      list-style: none;
+      height: 80px;
+      padding-left: 40px;
+      cursor: pointer;
+      &:hover {
+        background-color: @white;
+      }
+      i{
+        margin-right: 16px;
+      }
+      span{
+        font-size: 18px;
+        color: #333333;
+      }
+    }
+  }
+}

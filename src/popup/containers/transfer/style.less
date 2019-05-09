@@ -1,0 +1,46 @@
+
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.transfer-container{
+  height: 100vh;
+  background-color: @gray;
+  .transfer-box{
+    margin-top: 20px;
+    text-align: center;
+  }
+  .input-label-box{
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .balance{
+    color: @blue;
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+  .igas-price{
+    margin-right: 10px;
+    cursor: pointer;
+    i{
+      margin-left: 0;
+    }
+  }
+  .error-message{
+    margin-top: 4px;
+    color: @brand-red;
+    font-size: 12px;
+  }
+  .btn-submit{
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+  }
+}

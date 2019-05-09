@@ -1,0 +1,14 @@
+{
+  "appName": {
+    "message": "iWallet",
+    "description": "The name of the react extension."
+  },
+  "appDescription": {
+    "message": "Wallet Extension for IOST",
+    "description": "The description of the extension."
+  },
+  "btnTooltip": {
+    "message": "iWallet",
+    "description": "Tooltip for the button."
+  }
+}

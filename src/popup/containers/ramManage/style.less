@@ -1,0 +1,43 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+
+.ram-manage-container{
+  height: 100vh;
+  background-color: @gray;
+  .ram-manage-box{
+    padding: 15px;
+    overflow: auto;
+    height: calc(100vh - 60px);
+  }
+
+  .tabpane-box{
+    .field-box{
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      span{
+        &:last-child:not(:first-child){
+           color: #1E64E2;
+        }
+      }
+    }
+    .btn-submit{
+      margin: 20px 0 10px;
+      &:disabled{
+        cursor: not-allowed;
+      }
+    }
+    input{
+      background-color: #F6F6F6;
+    }
+    .equal-iost{
+      margin-top: 5px;
+      text-align: right;
+      font-size: 14px;
+      color: #333333;
+      margin-top: -10px;
+    }
+  }
+}

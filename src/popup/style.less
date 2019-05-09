@@ -1,0 +1,61 @@
+@import "~@themes/vars.less";
+@import "~@themes/mixin.less";
+@import "~@themes/normalize.less";
+
+@font-face {
+  font-family: 'SF-UI';
+  src: url(/assets/fonts/SF-UI-Display-Regular.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url(/assets/fonts/Roboto-Bold.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(/assets/fonts/Montserrat-Regular.ttf) format('truetype');
+}
+
+html, body{
+  width: 360px;
+  height: 600px;
+  overflow: hidden;
+  word-break: break-word;
+  font-family: PingFang SC, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+#root{
+  // background-color: @gray;
+  border:1px solid #ccc;
+  height: 600px;
+}
+
+p, h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a{
+  color: inherit;
+}
+
+*{
+  outline:none;
+  .box();
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
+.hide{
+  display: none;
+}
