@@ -29,16 +29,31 @@ type Props = {
 
 }
 
+
+let tokenList = [
+  {symbol: 'iost', amount: '1234.56788765'},
+  {symbol: 'emogi', amount: '1234.56788765'},
+  {symbol: 'abct', amount: '1234.56788765'},
+  {symbol: 'iet', amount: '1234.56788765'},
+  {symbol: 'usdt', amount: '1234.56788765'},
+  {symbol: 'btc', amount: '1234.56788765'},
+  {symbol: 'eth', amount: '1234.56788765'},
+  {symbol: 'trx', amount: '1234.56788765'},
+]
+
+
 class Index extends Component<Props> {
   state = {
     to: '',
     amount: 0,
     memo: '',
+    token: '',
     isSending: false,
     iGASPrice: defaultConfig.gasRatio,
     iGASLimit: defaultConfig.gasLimit,
     errorMessage: '',
     isShowing: false, // 是否显示多余资源输入框
+    isShowTokenList: false, // 是否显示token列表
   }
   _isMounted = false
 
@@ -234,19 +249,55 @@ class Index extends Component<Props> {
     changeLocation(location)
   }
 
+  backTo = () => {
+    const { changeLocation, locationList } = this.props
+    ui.deleteLocation()
+    const currentLocation = locationList[locationList.length - 1]
+    changeLocation(currentLocation)
+  }
+
+
   toggleMenu = () => {
     this.setState({
       isShowing: !this.state.isShowing,
     })
   }
 
+
+  toggleTokenList = (symbol) => () => {
+    this.setState({
+      token: symbol,
+      isShowTokenList: !this.state.isShowTokenList
+    })
+  }
+
+
   render() {
-    const { isSending, iGASPrice, iGASLimit, errorMessage, isShowing, balance } = this.state
+    const { isSending, iGASPrice, iGASLimit, errorMessage, isShowing, balance, isShowTokenList, token } = this.state
     const { className, selectedTokenSymbol } = this.props
     return (
       <Fragment>
-        <Header title={I18n.t('Account_Transfer')} onBack={this.moveTo('/account')} hasSetting={false} />
+        <Header title={I18n.t('Account_Transfer')} onBack={this.backTo} hasSetting={false} />
         <div className="tokenTransfer-box">
+          <div className="choose-token-box">
+            <label className="label">
+              选择Token
+            </label>
+            <Input
+              name="token"
+              onChange={this.handleChange}
+              value={token}
+              className="input"
+            />
+            <i className={cx("icon-arrow", isShowTokenList ? "active" : '')} onClick={this.toggleTokenList()}/>
+            <ul className={cx("token-list", isShowTokenList ? "active" : '')}>
+              {
+                tokenList.map(item => <li key={item.symbol} onClick={this.toggleTokenList(item.symbol)}>{`${item.symbol.toUpperCase()} (${item.amount})`}</li>)
+              }
+            </ul>
+          </div>
+
+
           <div className="transferAmount-box">
             <span className="transferAmount">{I18n.t('Transfer_Amount')}</span>
             <span className="balance">{I18n.t('Transfer_Balance', { num: balance, token: selectedTokenSymbol })}</span>
@@ -257,6 +308,7 @@ class Index extends Component<Props> {
             placeholder={I18n.t('Transfer_InputAmount')}
             className="input"
           />
+
           <label className="label">
             {I18n.t('Transfer_Payee')}
           </label>
@@ -315,6 +367,7 @@ class Index extends Component<Props> {
 }
 
 const mapStateToProps = (state) => ({
+  locationList: state.ui.locationList,
   selectedTokenSymbol: state.token.selectedTokenSymbol,
 })
 

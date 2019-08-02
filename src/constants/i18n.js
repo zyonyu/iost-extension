@@ -68,6 +68,9 @@ const enTranslation = {
   "Settings_lock": "Lock now",
   "Settings_whitelist": "Whitelist",
   "Settings_iostWallet": "About IOST Wallet",
+  "Settings_assetManage": "Asset Management",
+
+
   "ManageAccount_Add": "Import",
   "ManageAccount_PublicKey": "PubKey",
   "ManageAccount_PrivateKey": "Private Key",
@@ -219,6 +222,7 @@ const zhTranslation = {
   "Settings_lock": "立即锁定",
   "Settings_whitelist": "白名单",
   "Settings_iostWallet": "关于IOST钱包",
+  "Settings_assetManage": "资产管理",
 
   "ManageAccount_Add": "添加",
   "ManageAccount_PublicKey": "公钥",
@@ -374,6 +378,9 @@ const koTranslation = {
   "Settings_lock": "지금 잠구기",
   "Settings_whitelist": "화이트리스트",
   "Settings_iostWallet": "IOST 지갑 정보",
+  "Settings_assetManage": "Asset Management",
+
+
   "ManageAccount_Add": "추가",
   "ManageAccount_PublicKey": "퍼블릭 키",
   "ManageAccount_PrivateKey": "프라이빗 키",

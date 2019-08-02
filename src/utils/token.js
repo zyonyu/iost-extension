@@ -1,6 +1,7 @@
 import {
   updateSavedTokenSymbols,
   selectToken,
+  selectedListSymbol,
 } from 'actions/token'
 import store from '../store'
 
