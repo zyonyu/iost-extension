@@ -10,7 +10,11 @@ import LoadingImage from "components/LoadingImage";
 import cx from "classnames";
 import Input from "components/Input";
 import ui from "utils/ui";
-import token from "utils/token";
+import utils from 'utils'
+import iost from 'iostJS/iost'
+import user from 'utils/user'
+import token, { getTokenInfo } from "utils/token";
+
 
 type Props = {
 
@@ -27,11 +31,31 @@ let tokenList = [
   {symbol: 'trx', fullName: 'Endless Token'},
 ]
 
-
-
+/**
+ * assets = { ['account-network']: [{symbol:'',fullName: ''}]}
+ */
 class AssetManage extends Component<Props> {
   state = {
     isLoading: false,
+    token: '',
+    assetsList: []
+  }
+
+  componentDidMount() {
+    this.getAssets()
+  }
+
+  getAssets = () => {
+    Promise.all([
+      utils.getStorage('assets'),
+      user.getActiveAccount()
+    ]).then(([assetsList, account]) => {
+      if(assetsList){
+        this.setState({
+          assetsList: assetsList[`${account.name}-${account.network}`] || []
+        })
+      }
+    })
   }
 
   moveTo = (location) => () => {
@@ -61,10 +85,26 @@ class AssetManage extends Component<Props> {
     this.moveTo('/tokenDetail')()
   }
 
+  onAddToken = async () => {
+    const { token } = this.state
+    try {
+      const account = await user.getActiveAccount()
+      const _user = `${account.name}-${account.network}`
+      const data = await getTokenInfo(token, account.network == 'MAINNET')
+      const assets = await utils.getStorage('assets', {})
+      const asset = { symbol: 'token',fullName: data.full_name }
+      assets[_user] = [...(assets[_user] || []), asset]
+      await utils.setStorage('assets', assets)
+      alert('add success')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
 
 
   render() {
-    const { isLoading } = this.state
+    const { isLoading, assetsList } = this.state
     return (
       <Fragment>
         <Header title='资产管理' onBack={this.backTo} hasSetting={false} />
@@ -74,14 +114,14 @@ class AssetManage extends Component<Props> {
           </label>
           <div className="input-box">
             <Input
-              name="to"
+              name="token"
               onChange={this.handleChange}
               placeholder="添加Token"
               className="input"
             />
             <Button
               className="btn-add"
-              onClick={this.moveTo('/tokenTransfer')}
+              onClick={this.onAddToken}
             >
               添加
             </Button>
