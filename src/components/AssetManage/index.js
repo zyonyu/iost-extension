@@ -32,6 +32,7 @@ let tokenList = [
 class AssetManage extends Component<Props> {
   state = {
     isLoading: false,
+    tokenName: '',
   }
 
   moveTo = (location) => () => {
@@ -51,8 +52,7 @@ class AssetManage extends Component<Props> {
 
   handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value,
-      errorMessage: '',
+      tokenName: e.target.value,
     })
   }
 
@@ -62,37 +62,42 @@ class AssetManage extends Component<Props> {
   }
 
 
+  checkToken = () => {
+    const { tokenName } = this.state
+
+  }
+
 
   render() {
     const { isLoading } = this.state
     return (
       <Fragment>
-        <Header title='资产管理' onBack={this.backTo} hasSetting={false} />
+        <Header title={I18n.t('Settings_assetManage')} onBack={this.backTo} hasSetting={false} />
         <div className="AssetManage-box">
           <label className="label">
-            {I18n.t('Transfer_Payee')}
+            {I18n.t('Account_AddToken')}
           </label>
           <div className="input-box">
             <Input
-              name="to"
+              name="tokenName"
               onChange={this.handleChange}
-              placeholder="添加Token"
+              placeholder={I18n.t('AssetManage_TokenName')}
               className="input"
             />
             <Button
               className="btn-add"
-              onClick={this.moveTo('/tokenTransfer')}
+              onClick={this.checkToken}
             >
-              添加
+              {I18n.t('AssetManage_Add')}
             </Button>
           </div>
 
-          <p className="asset-title">我的资产</p>
+          <p className="asset-title">{I18n.t('AssetManage_MyAsset')}</p>
           <ul className="token-list-wrapper">
             {
               tokenList.map(item =>
                 <li key={item.symbol} onClick={this.goToTokenDetail(item.symbol)}>
-                  <img src={iconSrc[item.symbol]} alt=""/>
+                  <img src={iconSrc[item.symbol] ? iconSrc[item.symbol] : iconSrc['default']} alt=""/>
                   <span>{`${item.symbol.toUpperCase()} (${item.fullName})`}</span>
                 </li>
               )

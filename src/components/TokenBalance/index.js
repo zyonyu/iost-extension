@@ -171,20 +171,32 @@ class Index extends Component<Props> {
             </div>
 
 
+            {/*<div className="coin-list-wrapper">*/}
+            {/*  {*/}
+            {/*    tokenList.map(item =>*/}
+            {/*      <div className="coin-box" key={item.symbol} onClick={this.goToTokenDetail(item.symbol)}>*/}
+            {/*        <div className="img-name">*/}
+            {/*          <img className="coin-img" src={iconSrc[item.symbol] ? iconSrc[item.symbol] : iconSrc['default']} alt=''/>*/}
+            {/*          <span>{item.symbol.toUpperCase()}</span>*/}
+            {/*        </div>*/}
+            {/*        <span>{item.amount}</span>*/}
+            {/*      </div>*/}
+            {/*    )*/}
+            {/*  }*/}
+            {/*  <p className="add-token" onClick={moveTo('/assetManage')}><i />{I18n.t('Account_AddToken')}</p>*/}
+            {/*</div>*/}
+
+
             <div className="coin-list-wrapper">
               {
                 tokenList.map(item =>
-                  <div className="coin-box" key={item.symbol} onClick={this.goToTokenDetail(item.symbol)}>
-                    <div className="img-name">
-                      <img className="coin-img" src={iconSrc[item.symbol]} alt=''/>
-                      <span>{item.symbol.toUpperCase()}</span>
-                    </div>
-                    <span>{item.amount}</span>
-                  </div>
+                  <TokenContent symbol={item.symbol} key={item.symbol} goToTokenDetail={this.goToTokenDetail}/>
                 )
               }
-              <p className="add-token" onClick={moveTo('/assetManage')}><i />add Token</p>
+              <p className="add-token" onClick={moveTo('/assetManage')}><i />{I18n.t('Account_AddToken')}</p>
             </div>
+
+
             {/*<p className="TokenBalance__resources_manage">*/}
             {/*  <a onClick={moveTo('/gasManage')}>{I18n.t('GasManage_Title')}</a>*/}
             {/*  <a onClick={moveTo('/ramManage')}>{I18n.t('RamManage_Title')}</a>*/}
@@ -196,6 +208,47 @@ class Index extends Component<Props> {
 
   }
 }
+
+
+class TokenContent extends Component<Props> {
+  state = {
+    isLoading: false,
+    balance: 0,
+  }
+
+  componentDidMount() {
+    this.getTokenBalance()
+  }
+
+
+  getTokenBalance = async () => {
+    const { symbol } = this.props
+    this.setState({
+      isLoading: true
+    })
+    const { balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), symbol)
+    this.setState({
+      isLoading: false,
+      balance
+    })
+  }
+
+  render(){
+    const { balance, isLoading } = this.state
+    const { symbol, goToTokenDetail } = this.props
+    return(
+      <div className="coin-box" onClick={goToTokenDetail(symbol)}>
+        <div className="img-name">
+          <img className="coin-img" src={iconSrc[symbol] ? iconSrc[symbol] : iconSrc['default']} alt=''/>
+          <span>{symbol.toUpperCase()}</span>
+        </div>
+        <span>{isLoading ? 0 : balance}</span>
+      </div>
+    )
+  }
+}
+
+
 
 const mapStateToProps = (state) => ({
 })

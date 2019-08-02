@@ -281,7 +281,7 @@ class Index extends Component<Props> {
         <div className="tokenTransfer-box">
           <div className="choose-token-box">
             <label className="label">
-              选择Token
+              {I18n.t('Transfer_Choose')}
             </label>
             <Input
               name="token"

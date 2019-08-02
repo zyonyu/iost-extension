@@ -9,6 +9,8 @@ import iconSrc from "constants/icon";
 import LoadingImage from "components/LoadingImage";
 import cx from "classnames";
 import ui from "utils/ui";
+import iost from "iostJS/iost";
+import token from "utils/token";
 
 type Props = {
 
@@ -17,7 +19,13 @@ type Props = {
 class TokenDetail extends Component<Props> {
   state = {
     isLoading: false,
+    balance: 0,
   }
+
+  componentDidMount() {
+    this.getTokenBalance()
+  }
+
 
   moveTo = (location) => () => {
     const { changeLocation } = this.props
@@ -27,28 +35,43 @@ class TokenDetail extends Component<Props> {
 
 
   backTo = () => {
+    // 每次离开这个页面，都要重置为iost
+    token.selectToken('iost')
     const { changeLocation, locationList } = this.props
     ui.deleteLocation()
     const currentLocation = locationList[locationList.length - 1]
     changeLocation(currentLocation)
   }
 
+  getTokenBalance = async () => {
+    const { selectedTokenSymbol } = this.props
+    this.setState({
+      isLoading: true
+    })
+    const { balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), selectedTokenSymbol)
+    this.setState({
+      isLoading: false,
+      balance
+    })
+  }
+
+
   render() {
-    const { selectedTokenSymbol, locationList } = this.props
-    const { isLoading } = this.state
+    const { selectedTokenSymbol } = this.props
+    const { balance, isLoading } = this.state
     return (
       <Fragment>
         <Header title={selectedTokenSymbol.toUpperCase()} onBack={this.backTo} hasSetting={false} />
         <div className="TokenDetail-box">
           <div className="logo-box">
-            <img className="logo" src={iconSrc[selectedTokenSymbol]} alt=''/>
+            <img className="logo" src={iconSrc[selectedTokenSymbol] ? iconSrc[selectedTokenSymbol] : iconSrc['default']} alt=''/>
           </div>
           <div className="amount-box">
-            <span className="amount">{isLoading ? <LoadingImage /> : '1234.56788765'}</span>
+            <span className="amount">{isLoading ? <LoadingImage /> : balance}</span>
             <span>{selectedTokenSymbol}</span>
           </div>
-          <p className="token-fullName">Token全称：Endless Token</p>
-          <a className="view-detail" href={`https://www.iostabc.com/token/${selectedTokenSymbol}`} target="_blank">查看详情</a>
+          <p className="token-fullName">{I18n.t('TokenDetail_Full')} Endless Token</p>
+          <a className="view-detail" href={`https://www.iostabc.com/token/${selectedTokenSymbol}`} target="_blank">{I18n.t('TokenDetail_Detail')}</a>
 
           <div className="btn-box">
             <Button

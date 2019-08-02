@@ -12,3 +12,5 @@ export const token = {
 }
 
 export default token
+
+export const defaultTokenList = []
