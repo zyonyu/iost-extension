@@ -10,7 +10,12 @@ import LoadingImage from "components/LoadingImage";
 import cx from "classnames";
 import Input from "components/Input";
 import ui from "utils/ui";
-import token from "utils/token";
+
+import utils from 'utils'
+import iost from 'iostJS/iost'
+import user from 'utils/user'
+import token, { getTokenInfo, defaultAssets } from "utils/token";
+
 
 type Props = {
 
@@ -27,12 +32,31 @@ let tokenList = [
   {symbol: 'trx', fullName: 'Endless Token'},
 ]
 
-
-
+/**
+ * assets = { ['account-network']: [{symbol:'',fullName: ''}]}
+ */
 class AssetManage extends Component<Props> {
   state = {
-    isLoading: false,
-    tokenName: '',
+    loading: false,
+    token: '',
+    assetsList: []
+  }
+
+  componentDidMount() {
+    this.getAssets()
+  }
+
+  getAssets = () => {
+    Promise.all([
+      utils.getStorage('assets'),
+      user.getActiveAccount()
+    ]).then(([assetsList, account]) => {
+      if(assetsList){
+        this.setState({
+          assetsList: assetsList[`${account.name}-${account.network}`] || []
+        })
+      }
+    })
   }
 
   moveTo = (location) => () => {
@@ -52,7 +76,7 @@ class AssetManage extends Component<Props> {
 
   handleChange = (e) => {
     this.setState({
-      tokenName: e.target.value,
+      token: e.target.value,
     })
   }
 
@@ -61,15 +85,47 @@ class AssetManage extends Component<Props> {
     this.moveTo('/tokenDetail')()
   }
 
-
-  checkToken = () => {
-    const { tokenName } = this.state
-
+  onAddToken = async () => {
+    const { token, assetsList } = this.state
+    if (!token.trim()) {
+      return
+    }
+    
+    const tempList = [...defaultAssets, ...assetsList]
+    const result = tempList.some(item => item.symbol.toUpperCase() == token.toUpperCase())
+    // token已存在
+    if (result) {
+      Toast.html(I18n.t('AssetManage_AddExisted'))
+      return
+    }
+    this.setState({
+      loading: true
+    })
+    try {
+      const account = await user.getActiveAccount()
+      const _user = `${account.name}-${account.network}`
+      // 未找到该币，会报错
+      const data = await getTokenInfo(token, account.network == 'MAINNET')
+      const assets = await utils.getStorage('assets', {})
+      const asset = { symbol: token, fullName: data.full_name }
+      assets[_user] = [...(assets[_user] || []), asset]
+      await utils.setStorage('assets', assets)
+      Toast.html(I18n.t('AssetManage_AddSuccess'))
+      // 刷新资产
+      this.getAssets()
+    } catch (err) {
+      Toast.html(I18n.t('AssetManage_AddNotFound'))
+      console.log(err)
+    }
+    this.setState({
+      loading: false
+    })
   }
 
 
+
   render() {
-    const { isLoading } = this.state
+    const { loading, assetsList, token } = this.state
     return (
       <Fragment>
         <Header title={I18n.t('Settings_assetManage')} onBack={this.backTo} hasSetting={false} />
@@ -79,23 +135,32 @@ class AssetManage extends Component<Props> {
           </label>
           <div className="input-box">
             <Input
-              name="tokenName"
+              name="token"
               onChange={this.handleChange}
               placeholder={I18n.t('AssetManage_TokenName')}
               className="input"
             />
             <Button
               className="btn-add"
-              onClick={this.checkToken}
+              onClick={this.onAddToken}
+              disabled={token === ''}
             >
-              {I18n.t('AssetManage_Add')}
+              { loading ? <LoadingImage /> : I18n.t('AssetManage_Add') }
             </Button>
           </div>
 
           <p className="asset-title">{I18n.t('AssetManage_MyAsset')}</p>
           <ul className="token-list-wrapper">
             {
-              tokenList.map(item =>
+              defaultAssets.map(item =>
+                <li key={item.symbol} onClick={this.goToTokenDetail(item.symbol)}>
+                  <img src={iconSrc[item.symbol] ? iconSrc[item.symbol] : iconSrc['default']} alt=""/>
+                  <span>{`${item.symbol.toUpperCase()} (${item.fullName})`}</span>
+                </li>
+              )
+            }
+            {
+              assetsList.map(item =>
                 <li key={item.symbol} onClick={this.goToTokenDetail(item.symbol)}>
                   <img src={iconSrc[item.symbol] ? iconSrc[item.symbol] : iconSrc['default']} alt=""/>
                   <span>{`${item.symbol.toUpperCase()} (${item.fullName})`}</span>

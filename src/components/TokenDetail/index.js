@@ -10,7 +10,10 @@ import LoadingImage from "components/LoadingImage";
 import cx from "classnames";
 import ui from "utils/ui";
 import iost from "iostJS/iost";
-import token from "utils/token";
+import token, {getTokenInfo} from "utils/token";
+import utils from "utils/index";
+import user from "utils/user";
+
 
 type Props = {
 
@@ -20,6 +23,7 @@ class TokenDetail extends Component<Props> {
   state = {
     isLoading: false,
     balance: 0,
+    fullName: '',
   }
 
   componentDidMount() {
@@ -48,17 +52,29 @@ class TokenDetail extends Component<Props> {
     this.setState({
       isLoading: true
     })
-    const { balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), selectedTokenSymbol)
-    this.setState({
-      isLoading: false,
-      balance
+
+    const account = await user.getActiveAccount()
+    Promise.all([
+      iost.rpc.blockchain.getBalance(iost.account.getID(), selectedTokenSymbol),
+      getTokenInfo(selectedTokenSymbol, account.network == 'MAINNET')
+    ]).then(([balance, fullName]) => {
+      this.setState({
+        isLoading: false,
+        balance: balance.balance,
+        fullName: fullName.full_name
+      })
+    }).catch((err) => {
+      console.log(err)
+      this.setState({
+        isLoading: false,
+      })
     })
   }
 
 
   render() {
     const { selectedTokenSymbol } = this.props
-    const { balance, isLoading } = this.state
+    const { balance, fullName, isLoading } = this.state
     return (
       <Fragment>
         <Header title={selectedTokenSymbol.toUpperCase()} onBack={this.backTo} hasSetting={false} />
@@ -70,7 +86,7 @@ class TokenDetail extends Component<Props> {
             <span className="amount">{isLoading ? <LoadingImage /> : balance}</span>
             <span>{selectedTokenSymbol}</span>
           </div>
-          <p className="token-fullName">{I18n.t('TokenDetail_Full')} Endless Token</p>
+          <p className="token-fullName">{I18n.t('TokenDetail_Full')} {fullName}</p>
           <a className="view-detail" href={`https://www.iostabc.com/token/${selectedTokenSymbol}`} target="_blank">{I18n.t('TokenDetail_Detail')}</a>
 
           <div className="btn-box">

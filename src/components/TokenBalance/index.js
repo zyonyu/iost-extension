@@ -12,7 +12,7 @@ import iconSrc from 'constants/icon'
 import utils from 'utils'
 import ui from "utils/ui";
 import user from "utils/user";
-import token from 'utils/token'
+import token, { defaultAssets } from 'utils/token'
 
 
 import './index.scss'
@@ -23,22 +23,10 @@ type Props = {
 
 
 
-let tokenList = [
-  {symbol: 'iost', amount: '1234.56788765'},
-  {symbol: 'emogi', amount: '1234.56788765'},
-  {symbol: 'abct', amount: '1234.56788765'},
-  {symbol: 'iet', amount: '1234.56788765'},
-  {symbol: 'usdt', amount: '1234.56788765'},
-  {symbol: 'btc', amount: '1234.56788765'},
-  {symbol: 'eth', amount: '1234.56788765'},
-  {symbol: 'trx', amount: '1234.56788765'},
-]
-
-
-
 class Index extends Component<Props> {
   state = {
     amount: 0,
+    assetsList: [],
     isLoading: true,
     isError: false
   }
@@ -47,6 +35,7 @@ class Index extends Component<Props> {
   componentDidMount() {
     this._isMounted = true
     this.getData()
+    this.getAssets()
   }
 
   getData = async () => {
@@ -126,9 +115,23 @@ class Index extends Component<Props> {
   }
 
 
+  getAssets = () => {
+    Promise.all([
+      utils.getStorage('assets'),
+      user.getActiveAccount()
+    ]).then(([assetsList, account]) => {
+      if(assetsList){
+        this.setState({
+          assetsList: assetsList[`${account.name}-${account.network}`] || []
+        })
+      }
+    })
+  }
+
+
 
   render() {
-    const { frozenAmount, amount, gas, gas_used, userGasInfo, userRamInfo, ram, ram_used, isLoading } = this.state
+    const { frozenAmount, amount, gas, gas_used, userGasInfo, userRamInfo, ram, ram_used, isLoading, assetsList } = this.state
     const { account, moveTo } = this.props
 
     const url = account?`${account.network == 'MAINNET'?'https://www.iostabc.com':'http://54.249.186.224'}/account/${account.name}`:'#'
@@ -171,28 +174,19 @@ class Index extends Component<Props> {
             </div>
 
 
-            {/*<div className="coin-list-wrapper">*/}
-            {/*  {*/}
-            {/*    tokenList.map(item =>*/}
-            {/*      <div className="coin-box" key={item.symbol} onClick={this.goToTokenDetail(item.symbol)}>*/}
-            {/*        <div className="img-name">*/}
-            {/*          <img className="coin-img" src={iconSrc[item.symbol] ? iconSrc[item.symbol] : iconSrc['default']} alt=''/>*/}
-            {/*          <span>{item.symbol.toUpperCase()}</span>*/}
-            {/*        </div>*/}
-            {/*        <span>{item.amount}</span>*/}
-            {/*      </div>*/}
-            {/*    )*/}
-            {/*  }*/}
-            {/*  <p className="add-token" onClick={moveTo('/assetManage')}><i />{I18n.t('Account_AddToken')}</p>*/}
-            {/*</div>*/}
-
-
             <div className="coin-list-wrapper">
               {
-                tokenList.map(item =>
+                defaultAssets.map(item =>
                   <TokenContent symbol={item.symbol} key={item.symbol} goToTokenDetail={this.goToTokenDetail}/>
                 )
               }
+
+              {
+                assetsList.map(item =>
+                  <TokenContent symbol={item.symbol} key={item.symbol} goToTokenDetail={this.goToTokenDetail}/>
+                )
+              }
+
               <p className="add-token" onClick={moveTo('/assetManage')}><i />{I18n.t('Account_AddToken')}</p>
             </div>
 
@@ -236,13 +230,14 @@ class TokenContent extends Component<Props> {
   render(){
     const { balance, isLoading } = this.state
     const { symbol, goToTokenDetail } = this.props
+
     return(
       <div className="coin-box" onClick={goToTokenDetail(symbol)}>
         <div className="img-name">
           <img className="coin-img" src={iconSrc[symbol] ? iconSrc[symbol] : iconSrc['default']} alt=''/>
           <span>{symbol.toUpperCase()}</span>
         </div>
-        <span>{isLoading ? 0 : balance}</span>
+        <span>{isLoading ? '-' : balance}</span>
       </div>
     )
   }
