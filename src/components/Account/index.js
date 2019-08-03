@@ -101,10 +101,10 @@ class Account extends Component<Props> {
         // iost.loginAccount(name, encodedPrivateKey)
 
         iost.changeAccount(account)
+        await user.setActiveAccount(account)
         this.setState({
           currentAccount: account,
         })
-        await user.setActiveAccount(account)
         // console.log('switch account')
         this.toggleAccountList()
       }else {
