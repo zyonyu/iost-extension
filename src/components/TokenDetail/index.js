@@ -21,13 +21,23 @@ type Props = {
 
 class TokenDetail extends Component<Props> {
   state = {
-    isLoading: false,
+    isLoading: true,
     balance: 0,
     fullName: '',
   }
 
+  interval = null
+
   componentDidMount() {
     this.getTokenBalance()
+    this.interval = setInterval(() => {
+      this.getTokenBalance()
+    }, 5000)
+  }
+
+
+  componentWillUnmount() {
+    this.interval && clearInterval(this.interval)
   }
 
 
@@ -39,8 +49,6 @@ class TokenDetail extends Component<Props> {
 
 
   backTo = () => {
-    // 每次离开这个页面，都要重置为iost
-    token.selectToken('iost')
     const { changeLocation, locationList } = this.props
     ui.deleteLocation()
     const currentLocation = locationList[locationList.length - 1]
@@ -49,10 +57,6 @@ class TokenDetail extends Component<Props> {
 
   getTokenBalance = async () => {
     const { selectedTokenSymbol } = this.props
-    this.setState({
-      isLoading: true
-    })
-
     const account = await user.getActiveAccount()
     Promise.all([
       iost.rpc.blockchain.getBalance(iost.account.getID(), selectedTokenSymbol),

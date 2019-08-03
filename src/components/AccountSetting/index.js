@@ -13,7 +13,7 @@ const settingList = [
   { id: 4, name: 'lock' },
   { id: 5, name: 'whitelist' },
   { id: 6, name: 'iostWallet' },
-  { id: 7, name: 'assetManage' },
+  // { id: 7, name: 'assetManage' },
 ]
 type Props = {
 

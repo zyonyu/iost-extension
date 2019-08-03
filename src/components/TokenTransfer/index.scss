@@ -80,14 +80,18 @@
         z-index: 1;
       }
       > li {
-        height: 40px;
         font-size: 16px;
-        padding: 9px 15px;
         cursor: pointer;
         color: $input-text;
         font-weight: 300;
         &:hover {
-          background-color: rgba(0,0,0,0.2);
+          background-color: rgba(0,0,0,0.05);
+        }
+        .token-item {
+          display: inline-block;
+          width: 100%;
+          height: 40px;
+          padding: 9px 15px;
         }
       }
     }

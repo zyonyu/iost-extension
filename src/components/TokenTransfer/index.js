@@ -147,7 +147,7 @@ class Index extends Component<Props> {
     }
 
     // tx.addApprove("*", defaultConfig.defaultLimit)
-    tx.addApprove("iost", +amount)
+    tx.addApprove(token, +amount)
 
     if (iGASPrice) {
       tx.gasRatio = +iGASPrice
@@ -440,7 +440,7 @@ class TokenContent extends Component<Props> {
     const { balance, isLoading } = this.state
     const { symbol } = this.props
 
-    return <span onClick={this.onSelect}>{symbol.toUpperCase()} ({isLoading ? '-' : balance})</span>
+    return <span onClick={this.onSelect} className="token-item">{symbol.toUpperCase()} ({isLoading ? '-' : balance})</span>
   }
 }
 

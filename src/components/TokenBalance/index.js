@@ -33,6 +33,8 @@ class Index extends Component<Props> {
   _isMounted = false
 
   componentDidMount() {
+    // 每次要重置为iost
+    token.selectToken('iost')
     this._isMounted = true
     this.getData()
     this.getAssets()
@@ -47,6 +49,8 @@ class Index extends Component<Props> {
 
   componentWillReceiveProps(nextProps) {
     this.getResourceBalance(nextProps)
+    // 切换账号时，刷新资产
+    this.getAssets()
   }
   
 
@@ -155,7 +159,7 @@ class Index extends Component<Props> {
               <div className="progress-box" onClick={moveTo('/gasManage')}>
                 <div className="ram-default">
                   <span>iGAS</span>
-                  <span className="percent">{`${userGasInfo.limit?((1-userGasInfo.current_total/userGasInfo.limit)*100):0}%`}</span>
+                  <span className="percent">{`${userGasInfo.limit ? Math.round(((1-userGasInfo.current_total/userGasInfo.limit)*10000))/100 : 0}%`}</span>
                 </div>
                 <div className="progress-wrap">
                   <div className="progress-inner" style={{width: `${userGasInfo.limit ? Math.round((1-userGasInfo.current_total/userGasInfo.limit)*100):0}%`}}></div>
@@ -165,7 +169,7 @@ class Index extends Component<Props> {
               <div className="progress-box" onClick={moveTo('/ramManage')}>
                 <div className="ram-default">
                   <span>iRAM</span>
-                  <span className="percent">{`${userRamInfo.total ? Math.round(userRamInfo.used/userRamInfo.total*100):0}%`}</span>
+                  <span className="percent">{`${userRamInfo.total ? Math.round(userRamInfo.used/userRamInfo.total*10000)/100 : 0}%`}</span>
                 </div>
                 <div className="progress-wrap">
                   <div className="progress-inner" style={{width: `${userRamInfo.total?userRamInfo.used/userRamInfo.total*100:0}%`}}></div>
@@ -206,20 +210,27 @@ class Index extends Component<Props> {
 
 class TokenContent extends Component<Props> {
   state = {
-    isLoading: false,
+    isLoading: true,
     balance: 0,
   }
 
+  interval = null
+
   componentDidMount() {
     this.getTokenBalance()
+    this.interval = setInterval(() => {
+      this.getTokenBalance()
+    }, 5000)
+  }
+
+
+  componentWillUnmount() {
+    this.interval && clearInterval(this.interval)
   }
 
 
   getTokenBalance = async () => {
     const { symbol } = this.props
-    this.setState({
-      isLoading: true
-    })
     const { balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), symbol)
     this.setState({
       isLoading: false,
@@ -237,7 +248,7 @@ class TokenContent extends Component<Props> {
           <img className="coin-img" src={iconSrc[symbol] ? iconSrc[symbol] : iconSrc['default']} alt=''/>
           <span>{symbol.toUpperCase()}</span>
         </div>
-        <span>{isLoading ? '-' : balance}</span>
+        <span>{isLoading ? <LoadingImage />: balance}</span>
       </div>
     )
   }
