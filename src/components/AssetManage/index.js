@@ -86,13 +86,14 @@ class AssetManage extends Component<Props> {
   }
 
   onAddToken = async () => {
-    const { token, assetsList } = this.state
+    let { token, assetsList } = this.state
+    token = token.toLowerCase()
     if (!token.trim()) {
       return
     }
     
     const tempList = [...defaultAssets, ...assetsList]
-    const result = tempList.some(item => item.symbol.toUpperCase() == token.toUpperCase())
+    const result = tempList.some(item => item.symbol == token)
     // token已存在
     if (result) {
       Toast.html(I18n.t('AssetManage_AddExisted'))

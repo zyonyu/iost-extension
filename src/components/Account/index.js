@@ -82,7 +82,6 @@ class Account extends Component<Props> {
     const { changeLocation, locationList } = this.props
     ui.settingLocation(location)
     changeLocation(location)
-    
   }
 
   toggleAccountList = () => {
