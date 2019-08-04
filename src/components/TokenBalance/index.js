@@ -181,13 +181,13 @@ class Index extends Component<Props> {
             <div className="coin-list-wrapper">
               {
                 defaultAssets.map(item =>
-                  <TokenContent symbol={item.symbol} key={item.symbol} goToTokenDetail={this.goToTokenDetail}/>
+                  <TokenContent symbol={item.symbol} key={item.symbol} account={account} goToTokenDetail={this.goToTokenDetail}/>
                 )
               }
 
               {
                 assetsList.map(item =>
-                  <TokenContent symbol={item.symbol} key={item.symbol} goToTokenDetail={this.goToTokenDetail}/>
+                  <TokenContent symbol={item.symbol} key={item.symbol} account={account} goToTokenDetail={this.goToTokenDetail}/>
                 )
               }
 
@@ -222,6 +222,15 @@ class TokenContent extends Component<Props> {
       this.getTokenBalance()
     }, 5000)
   }
+
+  componentWillReceiveProps(nextProps) {
+    const { account } = this.props
+    const { account: newAccount } = nextProps
+    if(`${account.name}-${account.network}` != `${newAccount.name}-${newAccount.network}`){
+      this.getTokenBalance()
+    }
+  }
+  
 
 
   componentWillUnmount() {
