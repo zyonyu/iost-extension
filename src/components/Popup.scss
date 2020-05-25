@@ -66,3 +66,50 @@
     margin-top: -2px;
   }
 }
+
+.Popup__box{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 101;
+  width: 100%;
+  height: 100vh;
+  animation: openPopupBox 300ms;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.Popup_bottom{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 102;
+  width: 100%;
+  background-color: #fff;
+  overflow: scroll;
+  max-height: 540px;
+  animation: openBotPopup 300ms;
+}
+
+@keyframes openPopupBox {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes openBotPopup {
+  0% {
+    opacity: 0;
+    -webkit-transform: translate3d(0,100%,0);
+    transform: translate3d(0,100%,0);
+  }
+
+  100% {
+    opacity: 1;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}

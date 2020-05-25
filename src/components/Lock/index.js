@@ -60,7 +60,7 @@ class Lock extends Component<Props> {
           }
         })
         chrome.storage.local.get(['accounts'], ({accounts}) => {
-          if(accounts.length){
+          if(accounts && accounts.length){
             this.moveTo('/account')()
           }else {
             this.moveTo('/accountImport')()

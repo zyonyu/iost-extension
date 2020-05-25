@@ -29,6 +29,12 @@ import RamManage from './RamManage';
 import WhiteList from './WhiteList';
 import TokenDetail from './TokenDetail';
 import AssetManage from './AssetManage';
+import HardwareWallet from './HardwareWallet';
+import AccountCreatePage1 from './AccountCreatePage1';
+import AccountCreatePage2 from './AccountCreatePage2';
+import NewAccount from './NewAccount';
+import ConnectWallet from './ConnectWallet';
+import SelectAccount from './SelectAccount';
 
 export {
   Header,
@@ -61,4 +67,10 @@ export {
   WhiteList,
   TokenDetail,
   AssetManage,
+  HardwareWallet,
+  AccountCreatePage1,
+  AccountCreatePage2,
+  NewAccount,
+  ConnectWallet,
+  SelectAccount,
 }

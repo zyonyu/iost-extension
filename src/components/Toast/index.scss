@@ -58,6 +58,22 @@
     color: #2bffee;
   }
 }
+.fail-toast{
+  color: white;
+  background-color: #0000009c;
+  min-width: 150px;
+  max-width: 250px;
+  font-weight: 300;
+  .icon-fail-toast{
+    margin: 0 auto 18px;
+    width: 60*0.8px;
+    height: 60*0.8px;
+    background-image: url("/static/images/new-icon-err.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+}
 
 .icon{
   fill: currentColor;

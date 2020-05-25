@@ -4,7 +4,7 @@ import { I18n } from 'react-redux-i18n'
 import cx from 'classnames'
 
 import iost from 'iostJS/iost'
-import { Header } from 'components'
+import { Header, Modal, Toast } from 'components'
 import Input from 'components/Input'
 import Button from 'components/Button'
 // import TokenBalance from 'components/TokenBalance'
@@ -18,15 +18,17 @@ import token, { defaultAssets } from 'utils/token'
 import LoadingImage from 'components/LoadingImage'
 
 import './index.scss'
-import user from "utils/user";
-import iconSrc from "constants/icon";
+import user from 'utils/user';
+import iconSrc from 'constants/icon';
+
+const { Modal2 } = Modal
 
 const defaultConfig = {
   gasRatio: 1,
   gasLimit: 100000,
   delay: 0,
   expiration: 90,
-  defaultLimit: "unlimited"
+  defaultLimit: 'unlimited',
 }
 
 type Props = {
@@ -34,7 +36,7 @@ type Props = {
 }
 
 class Index extends Component<Props> {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       to: '',
@@ -61,7 +63,7 @@ class Index extends Component<Props> {
   }
 
   getData = async () => {
-    while(this._isMounted){
+    while (this._isMounted) {
       await this.getResourceBalance()
       await utils.delay(5000)
     }
@@ -88,10 +90,11 @@ class Index extends Component<Props> {
   //   })
   // }
 
-  getResourceBalance = () => {
-    return new Promise((resolve, reject) => {
-      iost.rpc.blockchain.getAccountInfo(iost.account.getID())
-      .then(({ balance, frozen_balances, gas_info, ram_info}) => {
+  getResourceBalance = () => new Promise((resolve, reject) => {
+    iost.rpc.blockchain.getAccountInfo(iost.account.getID())
+      .then(({
+        balance, frozen_balances, gas_info, ram_info,
+      }) => {
         const frozenAmount = frozen_balances.reduce((prev, next) => (prev += next.amount, prev), 0)
         this.setState({
           frozenAmount,
@@ -101,11 +104,10 @@ class Index extends Component<Props> {
         })
         resolve()
       })
-      .catch(err => {
+      .catch((err) => {
         resolve()
       })
-    })
-  }
+  })
 
   handleChange = (e) => {
     this.setState({
@@ -115,7 +117,9 @@ class Index extends Component<Props> {
   }
 
   transfer = () => {
-    const { to, amount, iGASPrice, iGASLimit, memo, token } = this.state
+    const {
+      to, amount, iGASPrice, iGASLimit, memo, token,
+    } = this.state
     const { selectedTokenSymbol } = this.props
     const accountName = iost.account.getID()
 
@@ -148,9 +152,9 @@ class Index extends Component<Props> {
 
     // 2. Sign on transfer tx
     // iost.account.signTx(tx)
-    
+
     iost.iost.setAccount(iost.account);
-    
+
     const handler = iost.iost.signAndSend(tx)
     // console.log('handler:', handler)
 
@@ -168,6 +172,8 @@ class Index extends Component<Props> {
     // 3. Handle transfer tx
     // const handler = new iost.pack.TxHandler(tx, iost.rpc)
 
+    // 在Ledger上打开IOST App
+    ui.toggleModal()
     this.setState({ isSending: true })
     handler.on('pending', (res) => {
       // .onPending(async (res) => {
@@ -183,6 +189,7 @@ class Index extends Component<Props> {
                 if (tx_receipt.status_code === "SUCCESS") {
                   this.setState({ isSending: false })
                   ui.settingTransferInfo(tx_receipt)
+                  ui.toggleModal()
                   this.moveTo('/tokenTransferSuccess')()
                 } else {
                   if (typeof tx_receipt === 'string') {
@@ -195,6 +202,7 @@ class Index extends Component<Props> {
                       isSending: false,
                     })
                     ui.settingTransferInfo(tx_receipt)
+                    ui.toggleModal()
                     this.moveTo('/tokenTransferFailed')()
                   }
                 }
@@ -220,6 +228,7 @@ class Index extends Component<Props> {
       // })
       .on('failed', (err) => {
         // clearInterval(intervalID)
+        ui.toggleModal()
         if (typeof err === 'string') {
           this.setState({
             isSending: false,
@@ -236,8 +245,22 @@ class Index extends Component<Props> {
           // })
         }
       })
-      // .send()
-      // .listen(1000, 60)
+
+
+    // .send()
+    // .listen(1000, 60)
+  }
+
+  // 取消
+  onCancel = () => {
+    ui.toggleModal()
+    // 已取消
+    // Toast.failIcon(I18n.t('CreateAccount_ToastFailTip'), 3)
+    // 已拒绝
+    // Toast.failIcon(I18n.t('CreateAccount_ToastFailTip2'), 3)
+    // 请求超时
+    const deviceNum = 'ADSF123123123';
+    Toast.failIcon(I18n.t('CreateAccount_ToastFailTip3') + deviceNum, 5)
   }
 
   moveTo = (location) => () => {
@@ -264,25 +287,25 @@ class Index extends Component<Props> {
     this.setState({
       token: symbol,
       balance,
-      isShowTokenList: false
+      isShowTokenList: false,
     })
   }
 
 
   toggleToken = () => {
     this.setState({
-      isShowTokenList: !this.state.isShowTokenList
+      isShowTokenList: !this.state.isShowTokenList,
     })
   }
 
   getAssets = () => {
     Promise.all([
       utils.getStorage('assets'),
-      user.getActiveAccount()
+      user.getActiveAccount(),
     ]).then(([assetsList, account]) => {
-      if(assetsList){
+      if (assetsList) {
         this.setState({
-          assetsList: assetsList[`${account.name}-${account.network}`] || []
+          assetsList: assetsList[`${account.name}-${account.network}`] || [],
         })
       }
     })
@@ -290,7 +313,9 @@ class Index extends Component<Props> {
 
 
   render() {
-    const { isSending, iGASPrice, iGASLimit, errorMessage, isShowing, balance, isShowTokenList, token, assetsList } = this.state
+    const {
+      isSending, iGASPrice, iGASLimit, errorMessage, isShowing, balance, isShowTokenList, token, assetsList,
+    } = this.state
     const { selectedTokenSymbol } = this.props
     return (
       <Fragment>
@@ -308,13 +333,13 @@ class Index extends Component<Props> {
               readOnly
               onClick={this.toggleToken}
             />
-            <i className={cx("icon-arrow", isShowTokenList ? "active" : '')} onClick={this.toggleToken}/>
-            <ul className={cx("token-list", isShowTokenList ? "active" : '')}>
+            <i className={cx('icon-arrow', isShowTokenList ? 'active' : '')} onClick={this.toggleToken} />
+            <ul className={cx('token-list', isShowTokenList ? 'active' : '')}>
               {
-                defaultAssets.map(item => <li key={item.symbol}><TokenContent symbol={item.symbol} token={token} toggleTokenList={this.toggleTokenList}/></li>)
+                defaultAssets.map((item) => <li key={item.symbol}><TokenContent symbol={item.symbol} token={token} toggleTokenList={this.toggleTokenList} /></li>)
               }
               {
-                assetsList.map(item => <li key={item.symbol}><TokenContent symbol={item.symbol} token={token} toggleTokenList={this.toggleTokenList}/></li>)
+                assetsList.map((item) => <li key={item.symbol}><TokenContent symbol={item.symbol} token={token} toggleTokenList={this.toggleTokenList} /></li>)
               }
             </ul>
           </div>
@@ -383,6 +408,9 @@ class Index extends Component<Props> {
           </div>
           <p className="TokenTransfer__errorMessage">{errorMessage}</p>
         </div>
+        <Modal2 title={I18n.t('ConnectWallet_Modal2Title')} isConfirm={false} onCancel={this.onCancel}>
+          <i className="icon-loading" />
+        </Modal2>
       </Fragment>
     )
   }
@@ -403,12 +431,12 @@ class TokenContent extends Component<Props> {
   getTokenBalance = async () => {
     const { symbol, token } = this.props
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
     const { balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), symbol)
     this.setState({
       isLoading: false,
-      balance
+      balance,
     })
 
     if (symbol == token) {
@@ -422,15 +450,13 @@ class TokenContent extends Component<Props> {
     this.props.toggleTokenList(symbol, balance)
   }
 
-  render(){
+  render() {
     const { balance, isLoading } = this.state
     const { symbol } = this.props
 
     return <span onClick={this.onSelect} className="token-item">{symbol.toUpperCase()} ({isLoading ? '-' : balance})</span>
   }
 }
-
-
 
 
 const mapStateToProps = (state) => ({

@@ -81,6 +81,11 @@ class Login extends Component<Props> {
     }
   }
 
+  onOpenWallet = () => {
+    // ui.settingLocation('/hardwareWallet')
+    this.props.changeLocation('/hardwareWallet')
+  }
+
 
   tryLogin = async () => {
     const { account, privateKey } = this.state
@@ -156,14 +161,15 @@ class Login extends Component<Props> {
             placeholder={I18n.t('firstLogin_RepeatPassword')}
           />
           {!!errorMessage && <p className="login-errorMessage">{errorMessage}</p>}
-          <div className="line"></div>
+          <div className="line" />
           <Button className="btn-accountImport" onClick={this.onImport}>{I18n.t('firstLogin_ImportAccount')}</Button>
           <p>{I18n.t('firstLogin_NoAndCreate1')}<a href="https://iostaccount.io/create" className="third-create" target="_blank">{I18n.t('firstLogin_NoAndCreate2')}</a></p>
+          <Button className="btn-accountImport" onClick={this.onOpenWallet}>{I18n.t('firstLogin_HardwareWallet')}</Button>
+          <p className="p_10_0">{I18n.t('firstLogin_UseByLedgerUsers')}</p>
           <div className="radio-box">
             <i className={isChecked ? '' : 'noChecked'} onClick={this.toggleChecked} />
             <span>
-              {I18n.t('firstLogin_AgreementTip1')}<br />
-              <a href='javascript:;' onClick={this.moveTo('/userAgreement')}> {I18n.t('firstLogin_AgreementTip2')}</a>
+              {I18n.t('firstLogin_AgreementTip1')}<a onClick={this.moveTo('/userAgreement')}>{I18n.t('firstLogin_AgreementTip2')}</a>
             </span>
           </div>
         </div>

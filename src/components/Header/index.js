@@ -20,7 +20,7 @@ class Header extends Component<Props> {
           hasSetting ? (setting ? <i className="icon-setting" onClick={onSetting} /> : 
           <span className="add-account" onClick={onAddIost}>
             <span>{I18n.t('ManageAccount_Add')}</span>
-          </span>) : <i />
+          </span>) : <i className={logo ? hasAdd ? 'icon-add': 'icon-logo' : 'icon-back'} />
         }
       </div>
     )

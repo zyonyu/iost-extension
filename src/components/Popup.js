@@ -7,14 +7,26 @@ import ui from 'utils/ui'
 import './Popup.scss'
 
 const Popup = ({ popup }) => {
-  return popup && (
-    <div className="Popup">
-      <div className="Popup__content">
-        <div className="Popup__closeButton" onClick={() => ui.closePopup()} />
-        {popup.content}
+  if (popup) {
+    if (popup.position && popup.position === 'bottom') {
+      return (
+      <div className="Popup__box">
+        <div className={`Popup_${popup.position}`}>
+          {popup.content}
+        </div>
       </div>
-    </div>
-  )
+      )
+    }
+    return (
+      <div className="Popup">
+        <div className="Popup__content">
+          <div className="Popup__closeButton" onClick={() => ui.closePopup()} />
+          {popup.content}
+        </div>
+      </div>
+    )
+  }
+  return ''
 }
 
 

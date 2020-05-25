@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { I18n } from 'react-redux-i18n'
 
 import Input from 'components/Input'
-import { Header,Toast, LoadingImage } from 'components'
+import { Header, Modal, Toast, LoadingImage } from 'components'
 import Button from 'components/Button'
 import iost from 'iostJS/iost'
 import store from '../../store'
@@ -14,6 +14,8 @@ import utils from 'utils'
 import ui from "utils/ui";
 import './index.scss'
 import classnames from "classnames";
+
+const { Modal2 } = Modal
 
 type Props = {
 
@@ -105,6 +107,9 @@ class GasManage extends Component<Props> {
 
   onSubmit = () => {
     const { isStake, buyAmount, resourceAddress, sellAmount } = this.state
+    // 在Ledger上打开IOST App
+    ui.toggleModal()
+
     const account = iost.account.getID()
     if(isStake){
       iost.signAndSend('gas.iost', 'pledge', [account, resourceAddress || account, buyAmount])
@@ -116,11 +121,13 @@ class GasManage extends Component<Props> {
       .on('success', (response) => {
         this.setState({ isLoading: false })
         ui.settingTransferInfo(response)
+        ui.toggleModal()
         this.moveTo('/tokenTransferSuccess')()
       })
       .on('failed', (err) => {
         this.setState({ isLoading: false })
         ui.settingTransferInfo(err)
+        ui.toggleModal()
         this.moveTo('/tokenTransferFailed')()
       })
     }else{
@@ -133,14 +140,28 @@ class GasManage extends Component<Props> {
       .on('success', (response) => {
         this.setState({ isLoading: false })
         ui.settingTransferInfo(response)
+        ui.toggleModal()
         this.moveTo('/tokenTransferSuccess')()
       })
       .on('failed', (err) => {
         this.setState({ isLoading: false })
         ui.settingTransferInfo(err)
+        ui.toggleModal()
         this.moveTo('/tokenTransferFailed')()
       })
     }
+  }
+
+  // 取消
+  onCancel = () => {
+    ui.toggleModal()
+    // 已取消
+    // Toast.failIcon(I18n.t('CreateAccount_ToastFailTip'), 3)
+    // 已拒绝
+    // Toast.failIcon(I18n.t('CreateAccount_ToastFailTip2'), 3)
+    // 请求超时
+    const deviceNum = 'ADSF123123123';
+    Toast.failIcon(I18n.t('CreateAccount_ToastFailTip3') + deviceNum, 5)
   }
 
   render() {
@@ -207,6 +228,9 @@ class GasManage extends Component<Props> {
             </ul>
           </div>
         </div>
+        <Modal2 title={I18n.t('ConnectWallet_Modal2Title')} isConfirm={false} onCancel={this.onCancel}>
+          <i className="icon-loading" />
+        </Modal2>
       </Fragment>
     )
   }

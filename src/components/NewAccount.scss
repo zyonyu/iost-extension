@@ -1,0 +1,41 @@
+@import "colors.scss";
+
+.popup_box {
+  font-family: 'Montserrat';
+  padding: 15px;
+}
+
+.popup_box__title {
+  font-size: 16px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid $light-grey;
+}
+
+.popup_box__label{
+  display: flex;
+  margin-top: 15px;
+}
+
+.popup_box__label_tit{
+  width: 100px;
+}
+
+.popup_box__label_con{
+  width: calc(100% - 100px);
+}
+
+.popup_box__btn{
+  margin-top: 15px;
+  width: 100%;
+}
+
+.popup_box__input_box{
+  margin-top: 15px;
+  .input-key {
+    width: 100%;
+    padding: 0 27px 0 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

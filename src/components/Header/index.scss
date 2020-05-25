@@ -13,10 +13,17 @@
     background-size: cover;
     cursor: pointer;
   }
+  .icon-back, .icon-logo{
+    &:last-child{
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
   .icon-back {
     width: 15*0.8px;
     height: 24*0.8px;
     background-image: url("/static/images/arrow-left.png");
+    
     opacity: 0.5;
     transition: .5s opacity;
     &:hover {
@@ -45,6 +52,7 @@
   .title {
     font-size: 18px;
     color: $title-text;
+
   }
   .add-account {
     position: relative;

@@ -1,0 +1,89 @@
+@import "colors.scss";
+
+.accountCreatePage2-box {
+  position: relative;
+  width: 100%;
+  height: 540px;
+  background-color: $gray;
+  padding: 20px 30px 0;
+  .title {
+    font-size: 16px;
+  }
+  .rule {
+    color: $title-text;
+    margin-top: 5px;
+  }
+  .label {
+    display: inline-block;
+    margin: 8px 0;
+  }
+  .key-box {
+    position: relative;
+    .input-key {
+      position: relative;
+      padding: 0 27px 0 15px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .account_click{
+      cursor: pointer;
+    }
+    .show_pop {
+      position: absolute;
+      left: 0;
+      top: 40px;
+      width: 100%;
+      background-color: $gray;
+      border: 1px solid #C4C4C4;
+      border-radius: 4px;
+      padding: 10px 20px;
+      z-index: 100;
+      .show_pop_item{
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        height: 40px;
+        .type{
+          width: 80px;
+          background-color: #E18A2F;
+          color: $white;
+          text-align: center;
+        }
+        .name{
+          padding: 0 10px;
+          width: calc(100% - 96px);
+          text-align: center;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .selected_icon{
+          width: 20*0.8px;
+          height: 20*0.8px;
+          background-image: url("/static/images/icon-nameChecked.png");
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+        }
+      }
+    }
+  }
+
+  .page2-btn-box {
+    text-align: center;
+  }
+
+  .info-box{
+    display: flex;
+    color: $title-text;
+    margin: 30px 0;
+    .info-item{
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

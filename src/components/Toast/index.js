@@ -5,7 +5,7 @@ import Notification from 'rc-notification'
 import classnames from 'classnames'
 import './index.scss'
 
-let prefixCls = 'toast'
+const prefixCls = 'toast'
 
 let messageInstance
 
@@ -20,31 +20,33 @@ function getMessageInstance(cb) {
   });
 }
 
-function notice(content, type, duration = 1, onClose){
-  // let iconType = ({
+function notice(content, type, duration = 1, onClose) {
+  // const iconType = ({
   //   // info: '',
-  //   // success: require('./assets/success.png'),
-  //   // fail: require('./assets/fail.svg'),
-  //   // offline: require('./assets/dislike.svg'),
-  //   // loading: 'loading',
+  //   success: require('./assets/success.png'),
+  //   fail: require('./assets/fail.svg'),
+  //   offline: require('./assets/dislike.svg'),
+  //   loading: 'loading',
   // })[type]
   if (typeof duration === 'function') {
     onClose = duration;
     duration = 3
   }
-
   getMessageInstance((instance) => {
     instance.notice({
       duration,
       style: {
-        top: 100,
+        top: /toast/.test(type) ? 200 : 100,
       },
       content: (
         <div className={classnames('toast-text', type)}>
-          <div>{I18n.t(`${content}`)}</div>
+          {/* {type === 'fail' ? <i className="icon-setting" onClick={onSetting} /> : ''} */}
+          {/* <div className={`icon-${type}`} /> */}
+          <div className="icon-fail-toast" />
+          {/toast/.test(type) ? <div>{content}</div> : <div>{I18n.t(`${content}`)}</div>}
         </div>
       ),
-      closable: true,
+      closable: !/toast/.test(type),
       onClose: () => {
         if (onClose) {
           onClose();
@@ -86,5 +88,8 @@ export default{
       messageInstance.destroy();
       messageInstance = null;
     }
-  }
+  },
+  failIcon(content, duration, onClose) {
+    return notice(content, 'fail-toast', duration, onClose);
+  },
 }
