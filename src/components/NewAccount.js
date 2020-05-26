@@ -35,11 +35,11 @@ class NewAccount extends Component<Props> {
           </div>
           <div className="popup_box__label">
             <div className="popup_box__label_tit">{I18n.t('CreateAccount_AllotMemory')}</div>
-            <div className="popup_box__label_con">{tx.allotMemory}</div>
+            <div className="popup_box__label_con">{tx.allotMemory} bytes</div>
           </div>
           <div className="popup_box__label">
             <div className="popup_box__label_tit">{I18n.t('CreateAccount_PledgeIGAS')}</div>
-            <div className="popup_box__label_con">{tx.pledgeIGAS}</div>
+            <div className="popup_box__label_con">{tx.pledgeIGAS} IOST</div>
           </div>
           <Button className="popup_box__btn" onClick={onNext}>{I18n.t('CreateAccount_NextStep')}</Button>
         </div>
@@ -49,7 +49,7 @@ class NewAccount extends Component<Props> {
       <div className="popup_box">
         <div className="popup_box__title">创建新账号</div>
         <div className="popup_box__input_box">
-          <Input name="password" placeholder={I18n.t('Lock_EnterPassword')} onChange={onChange} className="input-key" />
+          <Input name="password" type="password" placeholder={I18n.t('Lock_EnterPassword')} onChange={onChange} className="input-key" />
         </div>
         <Button className="popup_box__btn" onClick={onNext}>{I18n.t('ManageAccount_Confirm')}</Button>
       </div>

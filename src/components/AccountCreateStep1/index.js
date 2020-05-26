@@ -116,7 +116,7 @@ class AccountCreateStep1 extends Component<Props> {
           {
             isLoading ? <p className="rule">{I18n.t('CreateAccount_QueryStatus')}</p> : ''
           }
-          <Button className="btn-nextStep" onClick={this.onNext} disabled={account == ''}>{I18n.t('CreateAccount_NextStep')}</Button>
+          <Button className="btn-nextStep" onClick={this.onNext} disabled={account == ''}>{I18n.t('CreateAccount_NextStep')}1111</Button>
         </div>
       </Fragment>
     )

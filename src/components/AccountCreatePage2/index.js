@@ -48,7 +48,6 @@ class accountCreatePage2 extends Component<Props> {
 
   // 输入密码后确认
   confirm = () => {
-    console.log(456)
     ui.closePopup()
     const { changeLocation } = this.props
     changeLocation('/account')

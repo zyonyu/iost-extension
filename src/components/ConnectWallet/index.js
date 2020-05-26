@@ -16,14 +16,27 @@ type Props = {
 class ConnectWallet extends Component<Props> {
   state = {
     accountName: '了记得链接里',
+    timer: null
+  }
+
+
+  checkTimeOut = () => {
+    this.timer = setTimeout(() => {
+      ui.toggleModal()
+      Toast.failIcon(I18n.t('ConnectWallet_ConnectTimeout'), 3)
+    }, 1000 * 60 * 2)
   }
   onConnectWallet = () => {
     ui.toggleModal()
-    this.moveTo('/selectAccount')()
+    // 监听 2分钟 超时
+    this.checkTimeOut();
+    setTimeout(() => {
+      this.moveTo('/selectAccount')()
+    }, 3000)
   }
   onCancel = () => {
     ui.toggleModal()
-    Toast.failIcon(I18n.t('ConnectWallet_ConnectTimeout'), 3)
+    clearTimeout(this.timer)
   }
   moveTo = (location) => () => {
     const { changeLocation } = this.props

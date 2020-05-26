@@ -119,7 +119,7 @@ class AccountCreatePage1 extends Component<Props> {
         publicKey,
       })
       ui.toggleModal()
-    }, 300)
+    }, 3000)
   }
 
   // 取消/关闭
@@ -130,7 +130,7 @@ class AccountCreatePage1 extends Component<Props> {
       // 取消Toast
       Toast.failIcon(I18n.t('CreateAccount_ToastFailTip'), 3)
       // 拒绝Toast
-      Toast.failIcon(I18n.t('CreateAccount_ToastFailTip2'), 3)
+      // Toast.failIcon(I18n.t('CreateAccount_ToastFailTip2'), 3)
     }
     setTimeout(function () {
       that.setState({
