@@ -22,6 +22,9 @@
   "author": "nujabes403",
   "license": "GPL-3.0",
   "dependencies": {
+    "@ledgerhq/hw-transport-node-hid-noevents": "^5.15.0",
+    "@ledgerhq/hw-transport-u2f": "^5.15.0",
+    "bip32-path": "^0.4.2",
     "bs58": "^4.0.1",
     "classnames": "^2.2.5",
     "dotenv": "^6.0.0",
