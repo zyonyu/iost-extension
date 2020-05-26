@@ -32,5 +32,6 @@ export default token
 export const defaultAssets = [
   {symbol: 'iost', fullName: 'iost'},
   {symbol: 'lol', fullName: 'LOL'},
-  {symbol: 'abct', fullName: 'iostabc token'}
+  {symbol: 'abct', fullName: 'iostabc token'},
+  {symbol: 'nft', fullName: 'NFT'}
 ]

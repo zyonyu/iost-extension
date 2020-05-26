@@ -12,6 +12,7 @@ const iconSrc = {
   vost: '/static/images/icon-token-vost.svg',
   win: '/static/images/icon-token-win.png',
   default: '/static/images/icon-token-default.png',
+  nft: '/static/images/icon-token-nft.png',
 }
 
 
