@@ -1,9 +1,14 @@
 import React, { Component, Fragment } from 'react'
 import { I18n } from 'react-redux-i18n'
+import { connect } from 'react-redux'
 
 import { Header } from 'components'
 import Button from 'components/Button'
 import './index.scss'
+
+import iost from 'iostJS/iost'
+import user from 'utils/user';
+import utils from 'utils'
 
 type Props = {
 
@@ -11,24 +16,52 @@ type Props = {
 
 class SelectAccount extends Component<Props> {
   state = {
-    accounts: [{
-      id: 1,
-      name: '工地苦尽甘来',
-      balance: 10001,
-    }, {
-      id: 2,
-      name: 'gsdfgsdf',
-      balance: 55,
-    }],
-    selected: -1,
+    accounts: [],
   }
-  onImportAccount = () => {
+
+  componentWillMount() {
+    this.setState({
+      accounts: this.props.accounts
+    })
+  }
+
+  onImportAccount = async () => {
+    let accounts = this.state.accounts.filter( item => item.selected);
     const { changeLocation } = this.props
-    changeLocation('/account')
+    try {
+      accounts = await user.addUsers(accounts)
+      const activeAccount = await user.getActiveAccount()
+      if (activeAccount) {
+        changeLocation('/account')
+      } else {
+        iost.changeNetwork(utils.getNetWork(accounts[0].network))
+
+        iost.rpc.blockchain.getAccountInfo(accounts[0].name)
+          .then((accountInfo) => {
+            if (!iost.isValidAccount(accountInfo, accounts[0].publicKey)) {
+              this.throwErrorMessage()
+              return
+            }
+            iost.changeAccount(accounts[0])
+
+            // iost.loginAccount(accounts[0].name, accounts[0].publicKey)
+            chrome.storage.local.set({ activeAccount: accounts[0] }, () => {
+              changeLocation('/account')
+            })
+          })
+          .catch(this.throwErrorMessage)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    // changeLocation('/account')
   }
   selectItem = (idx) => () => {
+    let data = this.state.accounts;
+    data[idx].selected = !data[idx].selected;
+    data[idx].ledget = true;
     this.setState({
-      selected: this.state.selected === idx ? -1 : idx,
+      accounts: data
     })
   }
   moveTo = (location) => () => {
@@ -36,7 +69,8 @@ class SelectAccount extends Component<Props> {
     changeLocation(location)
   }
   render() {
-    const { accounts, selected } = this.state
+    const { selected, accounts } = this.state
+
     return (
       <Fragment>
         <Header title={I18n.t('SelectAccount_Title')} onBack={this.moveTo('/connectWallet')} hasSetting={false} />
@@ -46,10 +80,12 @@ class SelectAccount extends Component<Props> {
             accounts.map((item, idx) =>
               (
                 <div className="sel_item_box" onClick={this.selectItem(idx)} key={item.id}>
-                  {selected === idx ? <i className="icon-sel" /> : <i className="icon-unsel" />}
+                  {item.selected ? <i className="icon-sel" /> : <i className="icon-unsel" />}
                   <div className="sel_item">
                     <p className="sel_item_title">{item.name}</p>
-                    <p className="sel_item_text">{item.balance}</p>
+                    <p className="sel_item_text">
+                      {item.network == 'MAINNET' ? I18n.t('ManageAccount_Official') : item.network == 'LOCALNET' ? I18n.t('ManageAccount_Local') : I18n.t('ManageAccount_Test')}
+                    </p>
                   </div>
                 </div>
               )
@@ -61,4 +97,8 @@ class SelectAccount extends Component<Props> {
     )
   }
 }
-export default SelectAccount
+const mapStateToProps = (state) => ({
+  accounts: state.accounts.walletAccounts,
+})
+
+export default connect(mapStateToProps)(SelectAccount)

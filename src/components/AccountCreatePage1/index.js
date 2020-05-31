@@ -13,6 +13,8 @@ import * as userActions from 'actions/user'
 import ui from 'utils/ui';
 import './index.scss'
 
+import ledgerInstance from 'iostJS/ledgerInstance'
+
 const { Modal2 } = Modal
 
 type Props = {
@@ -49,7 +51,7 @@ class AccountCreatePage1 extends Component<Props> {
       await iost.rpc.blockchain.getAccountInfo(account)
       Toast.html(I18n.t('CreateAccount_AccountExist'))
     } catch (err) {
-      store.dispatch(userActions.createAccountInfo({ name: account }))
+      store.dispatch(userActions.createAccountInfo({ name: account, publicKey: publicKey }))
       this.moveTo('/accountCreatePage2')()
     }
     this.setState({
@@ -85,9 +87,12 @@ class AccountCreatePage1 extends Component<Props> {
       const index = Math.round(Math.random() * (charStr.length - 1));
       returnStr += charStr.substring(index, index + 1);
     }
+
+    const prefix = Date.now().toString();
+    const nameB = "u" + prefix.substr(prefix.length - 8) + "a";
     this.setState({
       illegal: false,
-      account: returnStr,
+      account: nameB,
     })
   }
 
@@ -104,9 +109,10 @@ class AccountCreatePage1 extends Component<Props> {
   }
 
   // 继续
-  onConfirm = () => {
+  onConfirm = async () => {
     const that = this
-    const publicKey = 'AJSDKFJALKSDJ12412KLFGSDGDSFJ51L(假数据)'
+    const publicKey = await ledgerInstance.getPublicKey();
+    // const publicKey = 'AJSDKFJALKSDJ12412KLFGSDGDSFJ51L(假数据)'
     that.setState({
       modelInfo: {
         isConfirm: false,
@@ -114,6 +120,8 @@ class AccountCreatePage1 extends Component<Props> {
         con: `${I18n.t('CreateAccount_Modal2Tip2')}\n${publicKey}`,
       },
     })
+
+    //模拟 legder 确认
     setTimeout(function () {
       that.setState({
         publicKey,
@@ -132,11 +140,11 @@ class AccountCreatePage1 extends Component<Props> {
       // 拒绝Toast
       // Toast.failIcon(I18n.t('CreateAccount_ToastFailTip2'), 3)
     }
-    setTimeout(function () {
-      that.setState({
-        modelInfo: {},
-      })
-    }, 300)
+    // setTimeout(function () {
+    //   that.setState({
+    //     modelInfo: {},
+    //   })
+    // }, 300)
   }
 
   // 账号输入

@@ -4,6 +4,7 @@ import { I18n } from 'react-redux-i18n'
 import cx from 'classnames'
 
 import iost from 'iostJS/iost'
+import ledgerInstance from 'iostJS/ledgerInstance'
 import { Header, Modal, Toast } from 'components'
 import Input from 'components/Input'
 import Button from 'components/Button'
@@ -51,6 +52,7 @@ class Index extends Component<Props> {
       errorMessage: '',
       isShowing: false, // 是否显示多余资源输入框
       isShowTokenList: false, // 是否显示token列表
+      isledger: false,
     }
   }
 
@@ -137,7 +139,7 @@ class Index extends Component<Props> {
     tx.setChainID(chainId)
 
     // tx.addApprove("*", defaultConfig.defaultLimit)
-    tx.addApprove(token, +amount)
+    tx (token, +amount)
 
     if (iGASPrice) {
       tx.gasRatio = +iGASPrice
@@ -172,8 +174,6 @@ class Index extends Component<Props> {
     // 3. Handle transfer tx
     // const handler = new iost.pack.TxHandler(tx, iost.rpc)
 
-    // 在Ledger上打开IOST App
-    ui.toggleModal()
     this.setState({ isSending: true })
     handler.on('pending', (res) => {
       // .onPending(async (res) => {
@@ -189,7 +189,6 @@ class Index extends Component<Props> {
                 if (tx_receipt.status_code === "SUCCESS") {
                   this.setState({ isSending: false })
                   ui.settingTransferInfo(tx_receipt)
-                  ui.toggleModal()
                   this.moveTo('/tokenTransferSuccess')()
                 } else {
                   if (typeof tx_receipt === 'string') {
@@ -202,7 +201,6 @@ class Index extends Component<Props> {
                       isSending: false,
                     })
                     ui.settingTransferInfo(tx_receipt)
-                    ui.toggleModal()
                     this.moveTo('/tokenTransferFailed')()
                   }
                 }
@@ -228,7 +226,6 @@ class Index extends Component<Props> {
       // })
       .on('failed', (err) => {
         // clearInterval(intervalID)
-        ui.toggleModal()
         if (typeof err === 'string') {
           this.setState({
             isSending: false,
@@ -250,6 +247,29 @@ class Index extends Component<Props> {
     // .send()
     // .listen(1000, 60)
   }
+
+  ledgerTransfer = () => {
+    const {
+      to, amount, iGASPrice, iGASLimit, memo, token,
+    } = this.state
+    const { selectedTokenSymbol } = this.props
+    const accountName = iost.account.getID()
+
+    this.setState({ isSending: true })
+
+    ledgerInstance.sendTransaction(token, accountName, to, amount, memo)
+    .onPending((response) => {
+
+    })
+    .onSuccess((response) => {
+      this.setState({ isSending: false })
+    })
+    .onFailed((err) => {
+      this.setState({ isSending: false })
+    })
+    
+  }
+
 
   // 取消
   onCancel = () => {
@@ -308,13 +328,18 @@ class Index extends Component<Props> {
           assetsList: assetsList[`${account.name}-${account.network}`] || [],
         })
       }
+      if(account.selected) {
+        this.setState({
+          isledger: true,
+        })
+      }
     })
   }
 
 
   render() {
     const {
-      isSending, iGASPrice, iGASLimit, errorMessage, isShowing, balance, isShowTokenList, token, assetsList,
+      isSending, iGASPrice, iGASLimit, errorMessage, isShowing, balance, isShowTokenList, token, assetsList, isledger,
     } = this.state
     const { selectedTokenSymbol } = this.props
     return (
@@ -400,7 +425,7 @@ class Index extends Component<Props> {
           <div className="btn-box">
             <Button
               className="btn-submit"
-              onClick={this.transfer}
+              onClick={ !isledger ? this.ledgerTransfer : this.transfer}
             >
               {isSending ? <LoadingImage /> : I18n.t('Transfer_Submit')}
             </Button>

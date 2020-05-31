@@ -1,6 +1,8 @@
 // const Transport = require('@ledgerhq/hw-transport');
 const TransportU2F = require( "@ledgerhq/hw-transport-u2f");
-const TransportNodeHid = require( "@ledgerhq/hw-transport-node-hid-noevents");
+// const TransportNodeHid = require( "@ledgerhq/hw-transport-node-hid-noevents");
+const TransportWebHid = require( "@ledgerhq/hw-transport-webhid");
+
 // const Logs = require( "@ledgerhq/logs");
 const Utils = require("./utils");
 
@@ -93,6 +95,8 @@ module.exports = function(appName, transport) {
     BASE58: 0x02,
     MORE: 0x80
   };
+
+
   this.open = async () => {
     let t = null;
     let descriptor = "";
@@ -102,13 +106,14 @@ module.exports = function(appName, transport) {
         t = await TransportU2F.default;
         break;
       case "hid":
-        t = await TransportNodeHid.default;
+        t = await TransportWebHid.default;
         break;
       }
+      
 
     if (t === null) {
       throw new Error("Unknown ledger transport - " + transport);
-    } else if (! await t.isSupported()) {
+    } else if (! await t.isSupported()) { // false
       throw new Error("Ledger transport '" + transport + "' not supported on this platform");
     } else {
       this.transport = await t.open(descriptor);

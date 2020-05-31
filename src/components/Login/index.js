@@ -8,6 +8,7 @@ import { privateKeyToPublicKey } from 'utils/key'
 import utils from 'utils'
 import ui from 'utils/ui';
 import hash from 'hash.js'
+import user from 'utils/user';
 
 import './index.scss'
 
@@ -23,9 +24,22 @@ class Login extends Component<Props> {
     privateKey: '',
     isChecked: true,
     errorMessage: '',
+    hasPassword: false,
   }
+
+  componentWillMount() {
+    this.checkPassword();
+  }
+
   componentDidMount() {
     ui.settingLocation('/login')
+  }
+
+  checkPassword = async () => {
+    const enpassword = await user.getEnPassword()
+    this.setState({
+      hasPassword: !!enpassword
+    })
   }
 
   handleChange = (e) => {
@@ -37,7 +51,7 @@ class Login extends Component<Props> {
 
   onCheckPassword = () => {
     const { password, repassword } = this.state
-    if(password == null || password.length < 8){
+    if (password == null || password.length < 8) {
       Toast.html(I18n.t('Password_Length'))
       return false;
     }
@@ -60,7 +74,12 @@ class Login extends Component<Props> {
   }
 
   onImport = () => {
-    const { password, isChecked } = this.state
+    const { password, isChecked, hasPassword } = this.state
+    if(hasPassword) {
+      ui.settingLocation('/accountImport')
+      this.props.changeLocation('/accountImport')
+      return
+    }
     if (!isChecked) {
       Toast.html(I18n.t('firstLogin_AgreementTip3'))
       return
@@ -69,7 +88,7 @@ class Login extends Component<Props> {
       // save password
       const en_password = hash.sha256().update(password).digest('hex')
       // const en_password = utils.aesEncrypt('account', password)
-      chrome.storage.local.set({password: en_password})
+      chrome.storage.local.set({ password: en_password })
       chrome.runtime.sendMessage({
         action: 'SET_PASSWORD',
         payload: {
@@ -82,8 +101,31 @@ class Login extends Component<Props> {
   }
 
   onOpenWallet = () => {
-    // ui.settingLocation('/hardwareWallet')
-    this.props.changeLocation('/hardwareWallet')
+    const { password, isChecked, hasPassword } = this.state
+    if(hasPassword) {
+      ui.settingLocation('/hardwareWallet')
+      this.props.changeLocation('/hardwareWallet')
+      return
+    }
+    if (!isChecked) {
+      Toast.html(I18n.t('firstLogin_AgreementTip3'))
+      return
+    }
+    if (this.onCheckPassword()) {
+      // save password
+      const en_password = hash.sha256().update(password).digest('hex')
+      // const en_password = utils.aesEncrypt('account', password)
+      chrome.storage.local.set({ password: en_password })
+      chrome.runtime.sendMessage({
+        action: 'SET_PASSWORD',
+        payload: {
+          password
+        }
+      })
+      ui.settingLocation('/hardwareWallet')
+      this.props.changeLocation('/hardwareWallet')
+    }
+
   }
 
 
@@ -138,28 +180,38 @@ class Login extends Component<Props> {
   }
 
   render() {
-    const { password, repassword, isChecked, errorMessage } = this.state
+    const { password, repassword, isChecked, errorMessage, hasPassword } = this.state
     return (
       <Fragment>
         <Landing />
         <div className="login-box">
-          <Input
-            name="password"
-            type="password"
-            className="input-password"
-            value={password}
-            onChange={this.handleChange}
-            placeholder={I18n.t('firstLogin_SetPassword')}
-          />
-          <Input
-            name="repassword"
-            type="password"
-            className="input-password"
-            value={repassword}
-            onChange={this.handleChange}
-            onKeyDown={this.keyOnImport}
-            placeholder={I18n.t('firstLogin_RepeatPassword')}
-          />
+          {
+            hasPassword ? null : (
+              <Input
+                name="repassword"
+                type="password"
+                className="input-password"
+                value={repassword}
+                onChange={this.handleChange}
+                onKeyDown={this.keyOnImport}
+                placeholder={I18n.t('firstLogin_RepeatPassword')}
+              />
+            )
+          }
+          {
+            hasPassword ? null : (
+              <Input
+                name="repassword"
+                type="password"
+                className="input-password"
+                value={repassword}
+                onChange={this.handleChange}
+                onKeyDown={this.keyOnImport}
+                placeholder={I18n.t('firstLogin_RepeatPassword')}
+              />
+            )
+          }
+
           {!!errorMessage && <p className="login-errorMessage">{errorMessage}</p>}
           <div className="line" />
           <Button className="btn-accountImport" onClick={this.onImport}>{I18n.t('firstLogin_ImportAccount')}</Button>

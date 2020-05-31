@@ -39,3 +39,9 @@ export const TRANSFER_INFO = 'TRANSFER_INFO'
 
 // 创建账户
 export const CREATE_ACCOUNT = 'CREATE_ACCOUNT'
+
+// 设置创建者
+export const SET_CREATER_LIST = 'SET_CREATER_LIST'
+
+// 设置钱包导入账号
+export const SET_WALLET_ACCOUNTS = 'SET_WALLET_ACCOUNTS'

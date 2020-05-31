@@ -1,14 +1,22 @@
 import React, { Component, Fragment } from 'react'
 import { I18n } from 'react-redux-i18n'
+import { connect } from 'react-redux'
 import ui from 'utils/ui'
 
 import Input from 'components/Input'
 import { Header } from 'components'
 import Button from 'components/Button'
 import NewAccount from 'components/NewAccount'
+import TransactionSuccess from 'components/TransactionSuccess'
+import TransactionFailed from 'components/TransactionFailed'
 import * as userActions from 'actions/user'
 import iost from 'iostJS/iost'
 import './index.scss'
+
+import { Landing, Toast } from 'components'
+import hash from 'hash.js'
+
+import ledgerInstance from 'iostJS/ledgerInstance'
 
 type Props = {
 
@@ -16,21 +24,8 @@ type Props = {
 
 class accountCreatePage2 extends Component<Props> {
   state = {
-    // createUser: 'aaaaaa',
-    accountName: '辣椒水里的看',
-    ownerPublicKey: 'FGSDGFSADFGSDFGDSFGHSDHSDGFHS',
-    activePublicKey: 'SDFHSDFGHSDFSDFGSDFGSDFGDG',
     allotMemory: '1024',
     pledgeIGAS: '10',
-    accountList: [{
-      id: 1,
-      type: '主网',
-      name: '将罚款是的搜嘎帝国时代放公司对方感受到法国',
-    }, {
-      id: 2,
-      type: '主网',
-      name: 'fdasdfasdf',
-    }],
     showSelect: false,
     selected: 0,
     password: '',
@@ -47,22 +42,74 @@ class accountCreatePage2 extends Component<Props> {
   }
 
   // 输入密码后确认
-  confirm = () => {
-    ui.closePopup()
-    const { changeLocation } = this.props
-    changeLocation('/account')
+  createAccount = () => {
+    const {
+      publicKey,
+      name,
+    } = this.props.createAccountInfo
+    ledgerInstance.newAccount(name, this.props.createrList[this.state.selected].name, publicKey)
+    .onPending((response) => {
+
+    })
+    .onSuccess((response) => {
+      const { changeLocation } = this.props
+      changeLocation('/account')
+    })
+    .onFailed((err) => {
+      ui.openPopup({ content: <TransactionFailed tx={err} /> })
+    })
+
+  }
+
+
+  // 输入密码后确认
+  confirm = async () => {
+    const { password } = this.state
+    const getEnPassword = () => new Promise((resolve, reject) => {
+      chrome.storage.local.get(['password'],({password: en_password}) => {
+        if(en_password){
+          resolve(en_password)
+        }else{
+          reject()
+        }
+      })
+    })
+    try {
+      const en_password = await getEnPassword()
+      const _password = hash.sha256().update(password).digest('hex')
+      // utils.aesDecrypt(en_password, password)
+      if(_password === en_password){
+        chrome.runtime.sendMessage({
+          action: 'SET_PASSWORD',
+          payload: {
+            password
+          }
+        })
+        this.createAccount();
+      }else {
+        Toast.html(I18n.t('Password_TryAgain'))
+        throw new Error('invalid password')
+      }
+    } catch (err) {
+      Toast.html(err)
+      throw new Error(err)
+    }
   }
 
   // 创建按钮
   create = () => {
     const {
-      accountName, ownerPublicKey, activePublicKey, allotMemory, pledgeIGAS, accountList, selected,
+      allotMemory, pledgeIGAS, selected,
     } = this.state
+    const {
+      publicKey,
+      name,
+    } = this.props.createAccountInfo
     const params = {
-      createUser: accountList[selected].name,
-      accountName,
-      ownerPublicKey,
-      activePublicKey,
+      createUser: this.props.createrList[selected].name,
+      accountName: name,
+      ownerPublicKey: publicKey,
+      activePublicKey: publicKey,
       allotMemory,
       pledgeIGAS,
     }
@@ -98,22 +145,27 @@ class accountCreatePage2 extends Component<Props> {
 
   render() {
     const {
-      accountName, ownerPublicKey, activePublicKey, allotMemory, pledgeIGAS, accountList, showSelect, selected,
+      allotMemory, pledgeIGAS, showSelect, selected,
     } = this.state
+
+    const {
+      publicKey,
+      name,
+    } = this.props.createAccountInfo
     return (
       <Fragment>
         <Header title={I18n.t('HardwareWallet_CreateAccount')} onBack={this.moveTo('/accountCreatePage1')} hasSetting={false} />
         <div className="accountCreatePage2-box">
           <span className="label">{I18n.t('CreateAccount_CreateUser')}</span>
           <div className="key-box">
-            <Input name="createUser" value={accountList[selected].name} readOnly onClick={this.showSelect} className="input-key account_click" />
+            <Input name="createUser" value={this.props.createrList[selected].name} readOnly onClick={this.showSelect} className="input-key account_click" />
             { showSelect ?
               <div className="show_pop">
                 {
-                  accountList.map((item, idx) =>
+                  this.props.createrList.map((item, idx) =>
                     (
-                      <div className="show_pop_item" onClick={this.selectItem(idx)} key={item.id}>
-                        <span className="type">{item.type}</span>
+                      <div className="show_pop_item" onClick={this.selectItem(idx)} key={item.name}>
+                        {/* <span className="type">{item.type}</span> */}
                         <span className="name">{item.name}</span>
                         {selected === idx ? <i className="selected_icon" /> : ''}
                       </div>
@@ -125,15 +177,15 @@ class accountCreatePage2 extends Component<Props> {
           </div>
           <span className="label">{I18n.t('CreateAccount_AccountName2')}</span>
           <div className="key-box">
-            <Input name="accountName" value={accountName} readOnly onChange={this.handleChange} className="input-key" />
+            <Input name="accountName" value={name} readOnly onChange={this.handleChange} className="input-key" />
           </div>
           <span className="label">{I18n.t('CreateAccount_OwnerPublicKey1')}</span>
           <div className="key-box">
-            <Input name="ownerPublicKey" value={ownerPublicKey} readOnly onChange={this.handleChange} className="input-key" />
+            <Input name="ownerPublicKey" value={publicKey} readOnly onChange={this.handleChange} className="input-key" />
           </div>
           <span className="label">{I18n.t('CreateAccount_ActivePublicKey1')}</span>
           <div className="key-box">
-            <Input name="activePublicKey" value={activePublicKey} readOnly onChange={this.handleChange} className="input-key" />
+            <Input name="activePublicKey" value={publicKey} readOnly onChange={this.handleChange} className="input-key" />
           </div>
           <div className="info-box">
             <div className="info-item">
@@ -154,4 +206,11 @@ class accountCreatePage2 extends Component<Props> {
   }
 }
 
-export default accountCreatePage2
+const mapStateToProps = (state) => ({
+  accounts: state.accounts.accounts,
+  locationList: state.ui.locationList,
+  createrList: state.user.createrList,
+  createAccountInfo: state.user.createAccountInfo,
+})
+
+export default connect(mapStateToProps)(accountCreatePage2)

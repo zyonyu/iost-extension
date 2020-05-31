@@ -2,7 +2,8 @@ import {
   SET_ACCOUNTS,
   ADD_ACCOUNTS,
   ADD_ACCOUNT,
-  DEL_ACCOUNT
+  DEL_ACCOUNT,
+  SET_WALLET_ACCOUNTS,
 } from 'actions/actionTypes'
 
 export const setAccounts = (accounts) => ({
@@ -30,5 +31,12 @@ export const delAccount = (account) => ({
   type: DEL_ACCOUNT,
   payload: {
     account: account,
+  }
+})
+
+export const setWalletAccounts = (walletAccounts) => ({
+  type: SET_WALLET_ACCOUNTS,
+  payload: {
+    walletAccounts: walletAccounts,
   }
 })

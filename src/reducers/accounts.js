@@ -2,11 +2,13 @@ import {
   SET_ACCOUNTS,
   ADD_ACCOUNTS,
   ADD_ACCOUNT,
-  DEL_ACCOUNT
+  DEL_ACCOUNT,
+  SET_WALLET_ACCOUNTS
 } from 'actions/actionTypes'
 
 const initialState = {
   accounts: [],
+  walletAccounts: [],
 }
 
 // {
@@ -18,6 +20,11 @@ const initialState = {
 
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_WALLET_ACCOUNTS:
+      return {
+        ...state,
+        walletAccounts: action.payload.walletAccounts,
+    }
     case SET_ACCOUNTS:
       return {
         ...state,

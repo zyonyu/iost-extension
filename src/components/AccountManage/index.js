@@ -72,7 +72,7 @@ class AccountManage extends Component<Props> {
 
       }else {
         await user.removeActiveAccount()
-        this.props.changeLocation('/accountImport')
+        this.props.changeLocation('/login')
       }
     }
     ui.toggleModal()
@@ -91,7 +91,7 @@ class AccountManage extends Component<Props> {
         <Header
           title={I18n.t('Settings_accountManage')}
           onBack={this.backTo}
-          onAddIost={this.moveTo('/accountImport')}
+          onAddIost={this.moveTo('/login')}
           setting={false}
         />
         <div className="accountManage-box">
