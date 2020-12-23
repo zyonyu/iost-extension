@@ -115,7 +115,7 @@ class Index extends Component<Props> {
   }
 
   transfer = () => {
-    const { to, amount, iGASPrice, iGASLimit, memo, token } = this.state
+    const { to, amount, iGASPrice, iGASLimit, memo, token, assetsList } = this.state
     const { selectedTokenSymbol } = this.props
     const accountName = iost.account.getID()
 
@@ -127,7 +127,9 @@ class Index extends Component<Props> {
     //   JSON.stringify([selectedTokenSymbol, accountName, to, amount, memo]),
     // )
     // tx.setTime(defaultConfig.expiration, defaultConfig.delay, 0)
-    const tx = iost.iost.callABI('token.iost', 'transfer', [token, accountName, to, amount, memo])
+    const asset = defaultAssets.concat(assetsList).find(item => item.symbol === token)
+    const contract = this.getAssetContract(asset)
+    const tx = iost.iost.callABI(contract, 'transfer', [token, accountName, to, amount, memo])
 
     const chainId = ((iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0) && (iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0) && (iost.rpc.getProvider()._host.indexOf('//localhost') < 0)) ? 1023 : 1024;
     tx.setChainID(chainId)
@@ -288,6 +290,12 @@ class Index extends Component<Props> {
     })
   }
 
+  getAssetContract(asset) {
+    if (typeof asset != "undefined" && asset.onlyIssuerCanTransfer && asset.issuer.startsWith("Contract")) {
+      return  asset.issuer;
+    }
+    return 'token.iost';
+  }
 
   render() {
     const { isSending, iGASPrice, iGASLimit, errorMessage, isShowing, balance, isShowTokenList, token, assetsList } = this.state
