@@ -1,5 +1,6 @@
 const iconSrc = {
   iost: '/static/images/icon-token-iost.png',
+  husd: '/static/images/icon-token-husd.png',
   lol: '/static/images/icon-token-lol.png',
   abct: '/static/images/icon-token-abct.svg',
   bait:  '/static/images/icon-token-bait.png',
