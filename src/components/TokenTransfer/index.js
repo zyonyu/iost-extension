@@ -127,11 +127,15 @@ class Index extends Component<Props> {
     //   JSON.stringify([selectedTokenSymbol, accountName, to, amount, memo]),
     // )
     // tx.setTime(defaultConfig.expiration, defaultConfig.delay, 0)
+    const chainId = ((iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0) && (iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0) && (iost.rpc.getProvider()._host.indexOf('//localhost') < 0)) ? 1023 : 1024;
+
     const asset = defaultAssets.concat(assetsList).find(item => item.symbol === token)
-    const contract = this.getAssetContract(asset)
+    let contract = this.getAssetContract(asset)
+    if(chainId === 1023 && token === 'husd') {
+      contract = "ContractaTTuzpKVGHPUMdojrM88LG8DaWsdN7L1ncnpzQsA4aF"
+    }
     const tx = iost.iost.callABI(contract, 'transfer', [token, accountName, to, amount, memo])
 
-    const chainId = ((iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0) && (iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0) && (iost.rpc.getProvider()._host.indexOf('//localhost') < 0)) ? 1023 : 1024;
     tx.setChainID(chainId)
 
     // tx.addApprove("*", defaultConfig.defaultLimit)
