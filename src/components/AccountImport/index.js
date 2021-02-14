@@ -216,7 +216,7 @@ class AccountImport extends Component<Props> {
                   <p className="localnetInfoText">{I18n.t('ImportAccount_LocalNetEndpointMessage')}</p>
                   <input name="endpoint" id="" value={this.state.endpoint} className="input-localnetInfo" onChange={this.handleChange} placeholder={I18n.t('ImportAccount_EnterEndpoint')}/>
                   <p className="localnetInfoText">{I18n.t('ImportAccount_LocalNetChainIDMessage')}</p>
-                  <input name="chainID" id="" value={this.state.chainID} className="input-localnetInfo" onChange={this.handleChange} placeholder={I18n.t('ImportAccount_EnterChainID')}/>
+                  <input name="chainID" id="" min="0" type="number" value={this.state.chainID} className="input-localnetInfo" onChange={this.handleChange} placeholder={I18n.t('ImportAccount_EnterChainID')}/>
                 </Fragment>
               }
             </Fragment>
