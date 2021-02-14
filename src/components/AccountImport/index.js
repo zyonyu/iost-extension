@@ -85,7 +85,7 @@ class AccountImport extends Component<Props> {
     try {
       publicKey = privateKeyToPublicKey(privateKey)
       if(accountName) {
-        let account = await nameAndPublicKeyToAccount(accountName, publicKey, 'LOCALNET')
+        let account = await nameAndPublicKeyToAccount(accountName, publicKey, this.state.endpoint)
         const password = await user.getLockPassword()
         accounts = [{ 
             name: account.name,
@@ -146,12 +146,7 @@ class AccountImport extends Component<Props> {
       if(activeAccount){
         changeLocation('/accountManage')
       }else {
-        url = utils.getNetWork(accounts[0].network)
-        if (accounts[0].network === 'LOCALNET') {
-          url = accounts[0].endpoint
-        }
-
-        iost.changeNetwork(url)
+        iost.changeNetwork(utils.getNetWork(account[0]))
         iost.rpc.blockchain.getAccountInfo(accounts[0].name)
         .then((accountInfo) => {
           if (!iost.isValidAccount(accountInfo, accounts[0].publicKey)) {

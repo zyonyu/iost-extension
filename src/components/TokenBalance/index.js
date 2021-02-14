@@ -60,8 +60,7 @@ class Index extends Component<Props> {
 
   getTokenBalance = async () => {
     const { account, selectedTokenSymbol } = this.props
-    const url = account.network == 'MAINNET' ? 'https://api.iost.io' : account.network == 'LOCALNET' ? 'http://127.0.0.1:30001' : 'https://test.api.iost.io';
-    iost.changeNetwork(url)
+    iost.changeNetwork(utils.getNetWork(account))
     const { balance, frozen_balances } = await iost.rpc.blockchain.getBalance(iost.account.getID(), selectedTokenSymbol)
 
     let frozenAmount = 0
@@ -81,7 +80,7 @@ class Index extends Component<Props> {
     return new Promise( async (resolve, reject) => {
       const { account } = props
       try {
-        iost.changeNetwork(utils.getNetWork(account.network))
+        iost.changeNetwork(utils.getNetWork(account))
         const { balance, frozen_balances, gas_info, ram_info } = await iost.rpc.blockchain.getAccountInfo(account.name)
         const frozenAmount = frozen_balances.reduce((prev, next) => (prev += next.amount, prev), 0)
         this.setState({

@@ -117,3 +117,21 @@ Golang
   }
   fmt.Println(sign.Verify(rawMessage))
 ```
+
+
+## For Local Dapp Development
+
+You can use the extension to communicate with local chains on your server. 
+
+Go to `Settings` -> `About IOST Wallet` -> `Developer Mode`, and enable Developer Mode.
+
+With the Developer Mode enabled, you 
+
+If you are importing an account on local chain, enter the account name you want to import, then provide endpoint and chainID information.
+Those information will be tied to the account info and used when the account tries to communicate with the chain.
+
+
+
+
+
+
