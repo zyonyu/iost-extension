@@ -70,7 +70,7 @@ class AccountImport extends Component<Props> {
   getDeveloperStatus = async () => {
     const developerMode = await utils.getStorage('developerMode');
 
-    this.setState(developerMode ? {developerMode, ...localnetDefault } : {developerMode});
+    this.setState(developerMode ? { developerMode, ...localnetDefault } : { developerMode });
   }
 
   onSubmit = async () => {

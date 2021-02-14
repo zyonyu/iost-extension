@@ -1,7 +1,0 @@
-{
-    "prettier.embeddedLanguageFormatting": "off",
-    "prettier.enable": false,
-    "eslint.enable": false,
-    "javascript.format.enable": false,
-    "eslint.codeActionsOnSave.mode": "problems"
-}
