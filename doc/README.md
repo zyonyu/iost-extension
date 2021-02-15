@@ -125,7 +125,7 @@ You can use the extension to communicate with local chains on your server.
 
 Go to `Settings` -> `About IOST Wallet` -> `Developer Mode`, and enable Developer Mode.
 
-With the Developer Mode enabled, you 
+With the Developer Mode enabled, you are able to import account on local chains.
 
 If you are importing an account on local chain, enter the account name you want to import, then provide endpoint and chainID information as well.
 Those information will be tied to the account info and used when the account tries to communicate with the chain.
