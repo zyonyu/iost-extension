@@ -137,7 +137,7 @@ class Index extends Component<Props> {
     const { frozenAmount, amount, gas, gas_used, userGasInfo, userRamInfo, ram, ram_used, isLoading, assetsList } = this.state
     const { account, moveTo } = this.props
 
-    const url = account?`${account.network == 'MAINNET'?'https://www.iostabc.com': account.network == 'LOCALNET'?'http://localhost:30001':'http://54.249.186.224'}/account/${account.name}`:'#'
+    const url = account?`${account.network == 'MAINNET'?'https://www.iostabc.com': account.network == 'LOCALNET'? account.endpoint || 'http://localhost:30001':'http://54.249.186.224'}/account/${account.name}`:'#'
 
     return (
       <div className="TokenBalance-box">
