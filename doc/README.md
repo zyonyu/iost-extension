@@ -127,9 +127,10 @@ Go to `Settings` -> `About IOST Wallet` -> `Developer Mode`, and enable Develope
 
 With the Developer Mode enabled, you 
 
-If you are importing an account on local chain, enter the account name you want to import, then provide endpoint and chainID information.
+If you are importing an account on local chain, enter the account name you want to import, then provide endpoint and chainID information as well.
 Those information will be tied to the account info and used when the account tries to communicate with the chain.
 
+This feature is still experimental. Please report any bugs or unexpected behavoiurs. 
 
 
 
