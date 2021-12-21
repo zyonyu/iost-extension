@@ -179,7 +179,7 @@ const IOSTBalance = ({ frozenAmount, amount, gas, gas_used, userGasInfo, ram, ra
               tokenList.map(item =>
                 <div className="coin-box" key={item.symbol} onClick={this.goToTokenDetail}>
                   <div className="img-name">
-                    <img className="coin-img" src={iconSrc[item.symbol]} alt=''/>
+                    <img className="coin-img" src={iconSrc['url']+item.symbol+'.png'} onError={iconSrc['default']} alt=''/>
                     <span>{item.symbol.toUpperCase()}</span>
                   </div>
                   <span>{item.asset}</span>

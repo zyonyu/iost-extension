@@ -1,4 +1,5 @@
 const iconSrc = {
+  url: 'https://www.iostabc.com/static/images/',
   iost: '/static/images/icon-token-iost.png',
   husd: '/static/images/icon-token-husd.png',
   lol: '/static/images/icon-token-lol.png',

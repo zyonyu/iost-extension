@@ -84,7 +84,7 @@ class TokenDetail extends Component<Props> {
         <Header title={selectedTokenSymbol.toUpperCase()} onBack={this.backTo} hasSetting={false} />
         <div className="TokenDetail-box">
           <div className="logo-box">
-            <img className="logo" src={iconSrc[selectedTokenSymbol] ? iconSrc[selectedTokenSymbol] : iconSrc['default']} alt=''/>
+            <img className="logo" src={iconSrc['url']+selectedTokenSymbol+'.png'} onError={iconSrc['default']} alt=''/>
           </div>
           <div className="amount-box">
             <span className="amount">{isLoading ? <LoadingImage /> : balance}</span>

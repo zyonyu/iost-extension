@@ -144,7 +144,7 @@ class AssetManage extends Component<Props> {
             {
               defaultAssets.map(item =>
                 <li key={item.symbol} onClick={this.goToTokenDetail(item.symbol)}>
-                  <img src={iconSrc[item.symbol] ? iconSrc[item.symbol] : iconSrc['default']} alt=""/>
+                  <img src={iconSrc['url']+item.symbol+'.png'} onError={iconSrc['default']} alt=""/>
                   <span>{`${item.symbol.toUpperCase()} (${item.fullName})`}</span>
                 </li>
               )
@@ -152,7 +152,7 @@ class AssetManage extends Component<Props> {
             {
               assetsList.map(item =>
                 <li key={item.symbol} onClick={this.goToTokenDetail(item.symbol)}>
-                  <img src={iconSrc[item.symbol] ? iconSrc[item.symbol] : iconSrc['default']} alt=""/>
+                  <img src={iconSrc['url']+item.symbol+'.png'} onError={iconSrc['default']} alt=""/>
                   <span>{`${item.symbol.toUpperCase()} (${item.fullName})`}</span>
                 </li>
               )

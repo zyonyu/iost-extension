@@ -253,7 +253,7 @@ class TokenContent extends Component<Props> {
     return(
       <div className="coin-box" onClick={goToTokenDetail(symbol)}>
         <div className="img-name">
-          <img className="coin-img" src={iconSrc[symbol] ? iconSrc[symbol] : iconSrc['default']} alt=''/>
+          <img className="coin-img" src={iconSrc['url']+symbol+'.png'} onError={iconSrc['default']} alt=''/>
           <span>{symbol.toUpperCase()}</span>
         </div>
         <span>{isLoading ? <LoadingImage />: balance}</span>
