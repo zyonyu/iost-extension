@@ -17,7 +17,7 @@ const store = createStore(
   composeEnhancers(applyMiddleware(thunkMiddleware, routingMiddleware))
 )
 
-const checkLan = (str) => ['en','zh','ko'].indexOf(str)> -1 ? str : null
+const checkLan = (str) => ['en','zh','ko','ja'].indexOf(str)> -1 ? str : null
 
 const defaultLan = () => {
   let lang = navigator.language||navigator.userLanguage;

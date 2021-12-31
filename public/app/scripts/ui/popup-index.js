@@ -44,6 +44,18 @@ const i18n = {
     "Dapp_Tip3": "* 如您将这个合约加入白名单，代表您允许您的账号在同一网站发起同一合约请求给同一收款方的情况下，直接给予签名，而不再进行手动授权。",
     "Dapp_Message_Signature": "请求信息签名",
   },
+  ja: {
+    "Dapp_Unlock": "解除しました",
+    "Dapp_Authorization": "承認が必要です",
+    "Dapp_Tip1": "* アカウント認証では秘密鍵は共有されません",
+    "Dapp_Tip2": "* 現在利用しているアプリケーションは、第三者が開発したものです、ご注意ください",
+    "Dapp_Signature": "署名が要求されました",
+    "Dapp_WhiteList": "ホワイトリストに追加",
+    "Dapp_Cancel": "キャンセル",
+    "Dapp_Confirm": "確定",
+    "Dapp_Tip3": "* このスマコンをホワイトリストに追加しておくと、同じスマコンで同じ操作を行う際に手動での操作が不要になり、ボタン一つで実行できます",
+    "Dapp_Message_Signature": "メッセージ署名が要求されました",
+  },
 }
 
 const transLocal = (lan, name) => {

@@ -82,6 +82,32 @@ const i18n = {
     "Dapp_Tip3": "* 如您将这个合约加入白名单，代表您允许您的账号在同一网站发起同一合约请求给同一收款方的情况下，直接给予签名，而不再进行手动授权。",
     "Dapp_Message_Signature": "请求信息签名",
   },
+  ja: {
+    "Transfer": "送金",
+    "Contract": "スマコン",
+    "RequestTo": "To",
+    "RequestAmount": "要求量",
+    "RequestMemo": "メモ",
+    "ActionX": "操作${X}",
+    "XActionsNeedYouPermission": "あなたの許可が必要です",
+    "XActionsNeedYouPermissionS": "あなたの許可が必要です",
+    "Dapp_iGasPrice": "iGas価格",
+    "Dapp_iGasAmount": "数量",
+    "Dapp_ResourceFees": "リソース費用",
+    "Dapp_AmountLimitTips": "* このトランザクションで消費されるトークンの限度額です（慎重に設定してください）",
+    "Dapp_From": "From",
+    "Dapp_Account": "アカウント",
+    "Dapp_AccountLimit": "アカウント限度額",
+    "Dapp_Authorization": "承認が必要です",
+    "Dapp_Signature": "署名が要求されました",
+    "Dapp_WhiteList": "ホワイトリストに追加",
+    "Dapp_Cancel": "キャンセル",
+    "Dapp_Confirm": "確定",
+    "Dapp_Tip1": "* アカウント認証では秘密鍵は共有されません",
+    "Dapp_Tip2": "* 現在利用しているアプリケーションは、第三者が開発したものです、ご注意ください",
+    "Dapp_Tip3": "* このスマコンをホワイトリストに追加しておくと、同じスマコンで同じ操作を行う際に手動での操作が不要になり、ボタン一つで実行できます",
+    "Dapp_Message_Signature": "メッセージ署名が要求されました",
+  },
 }
 
 const transLocal = (lan, name, ...args) => {
@@ -94,7 +120,7 @@ const transLocal = (lan, name, ...args) => {
   return result
 }
 
-const checkLan = (str) => ['en','zh','ko'].indexOf(str)> -1 ? str : null
+const checkLan = (str) => ['en','zh','ko',`ja`].indexOf(str)> -1 ? str : null
 
 const defaultLan = () => {
   let lang = navigator.language||navigator.userLanguage;

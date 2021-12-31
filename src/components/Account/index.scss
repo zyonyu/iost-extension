@@ -71,7 +71,7 @@
     left: 0;
     right: 0;
     margin: 0 auto;
-    width: 220px;
+    width: 250px;
     border-radius: 4px;
     background-color: $gray;
     overflow: hidden;
@@ -89,14 +89,14 @@
         display: flex;
         align-items: center;
         height: 50px;
-        padding: 0 25px;
+        padding: 0 20px;
         cursor: pointer;
         &:hover {
           background-color: $white;
         }
         .account-title {
           text-align: center;
-          width: 60px;
+          width: 74px;
           height: 20px;
           line-height: 20px;
           color: $white;

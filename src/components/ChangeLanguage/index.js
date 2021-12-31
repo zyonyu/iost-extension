@@ -10,6 +10,7 @@ const settingList = [
   { id: 1, name: 'china', lan: '中文' },
   { id: 2, name: 'english', lan: 'English' },
   { id: 3, name: 'korea', lan: '한국어' },
+  { id: 4, name: 'japan', lan: '日本語' },
 ]
 type Props = {
 
@@ -28,6 +29,8 @@ class ChangeLanguage extends Component<Props> {
       i18n.setLocale('en')
     } else if (name == 'korea') {
       i18n.setLocale('ko')
+    } else if (name == 'japan') {
+      i18n.setLocale('ja')
     }
     this.moveTo('/accountSetting')()
   }
