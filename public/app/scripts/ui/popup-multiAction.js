@@ -180,8 +180,9 @@ export default class extends Component {
       payload: {
         slotIdx: this.props.slotIdx,
       }
+    },() => {
+      window.close()
     })
-    window.close()
   }
 
   confirmTx = () => {
@@ -194,8 +195,9 @@ export default class extends Component {
         iGASPrice: this.state.iGASPrice,
         iGASLimit: this.state.iGASLimit
       }
+    },() => {
+      window.close()
     })
-    window.close()
   }
 
   toggleGasForm = () => {

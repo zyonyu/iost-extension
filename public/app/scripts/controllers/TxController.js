@@ -1,17 +1,17 @@
 const iostController = require('./IostController')
-const uuidv4 = require('uuid/v4');
-const crypto = require('crypto')
+const uuidv4 = require('uuid/v4')
 
-const Signature = require('iost/lib/crypto/signature');
-const IOST = require('iost')
+const Signature = require('@zyonyu/iost/lib/crypto/signature')
+const IOST = require('@zyonyu/iost/index.js')
 const bs58 = require('bs58')
-const Codec = require('iost/lib/crypto/codec');
+const Codec = require('@zyonyu/iost/lib/crypto/codec')
 
-const getStorage = (name, defvalue) => new Promise((resolve, reject) => {
-  chrome.storage.local.get([name], (result) => {
-    resolve(result[name] || defvalue)
+const getStorage = (name, defvalue) =>
+  new Promise((resolve, reject) => {
+    chrome.storage.local.get([name], result => {
+      resolve(result[name] || defvalue)
+    })
   })
-})
 
 const IOST_NODE_URL = 'https://api.iost.io' //当前节点
 const IOST_TEST_NODE_URL = 'https://test.api.iost.io'
@@ -20,7 +20,7 @@ function TxController(state) {
   this.state = state
   this.txQueue = []
   this.port = new Map()
-  chrome.runtime.onConnect.addListener( (port) => {
+  chrome.runtime.onConnect.addListener(port => {
     // this.port = port
     const name = `${port.name}_${uuidv4()}`
     // console.log('connect: ' + name)
@@ -28,32 +28,32 @@ function TxController(state) {
 
     port.onDisconnect.addListener(() => {
       // console.log('disconnect: '+ name)
-      this.port.delete(name);
+      this.port.delete(name)
     })
   })
 }
 
-TxController.prototype.findByIdx = function(idx) {
+TxController.prototype.findByIdx = function (idx) {
   return this.txQueue[idx]
 }
 
-TxController.prototype.addTx = function(txInfo) {
+TxController.prototype.addTx = function (txInfo) {
   this.txQueue.push(txInfo)
   return this.txQueue.length
 }
 
-TxController.prototype.processTx = async function(txIdx, isAddWhitelist, iGASPrice, iGASLimit) {
+TxController.prototype.processTx = async function (txIdx, isAddWhitelist, iGASPrice, iGASLimit) {
   const txInfo = this.txQueue[txIdx]
   if (!txInfo) throw new Error(`That TX does not exist. slotIdx: ${txIdx}`)
 
-  const signMessageActionName = "@__SignMessage";
+  const signMessageActionName = '@__SignMessage'
 
   const { tx: _tx, txABI, actionId, account, network, domain } = txInfo
-  const [ contract, actionName, memo ] = txABI
-  if(isAddWhitelist && signMessageActionName !== actionName){
+  const [contract, actionName, memo] = txABI
+  if (isAddWhitelist && signMessageActionName !== actionName) {
     let whitelist = await getStorage('whitelist', [])
     let _to = contract
-    if(actionName == 'transfer'){
+    if (actionName == 'transfer') {
       _to = memo[2]
     }
     whitelist.push({
@@ -62,28 +62,28 @@ TxController.prototype.processTx = async function(txIdx, isAddWhitelist, iGASPri
       account: account.name,
       contract,
       action: actionName,
-      to: _to
+      to: _to,
     })
 
     const hash = {}
     whitelist = whitelist.reduce((prev, next) => {
       const _h = `${network}_${next.domain}_${next.account}_${next.contract}_${next.action}_${next.to}`
-      hash[_h] ? '' : hash[_h] = true && prev.push(next);
+      hash[_h] ? '' : (hash[_h] = true && prev.push(next))
       return prev
-    },[]);
-    chrome.storage.local.set({whitelist: whitelist})
+    }, [])
+    chrome.storage.local.set({ whitelist: whitelist })
   }
 
   const accounts = await getStorage('accounts', [])
-  if(accounts.length){
+  if (accounts.length) {
     const acc = accounts.find(item => item.name == account.name && item.network == network)
-    if(acc){
+    if (acc) {
       const encodedPrivateKey = aesDecrypt(acc.privateKey, this.state.password)
-      const url = network === 'LOCALNET' ? acc.endpoint : network === 'MAINNET'?IOST_NODE_URL: IOST_TEST_NODE_URL
+      const url = network === 'LOCALNET' ? acc.endpoint : network === 'MAINNET' ? IOST_NODE_URL : IOST_TEST_NODE_URL
       await iostController.changeNetwork(url)
       iostController.loginAccount(account.name, encodedPrivateKey)
       const tx = new iostController.pack.Tx()
-      Object.keys(_tx).map(key => tx[key] = _tx[key])
+      Object.keys(_tx).map(key => (tx[key] = _tx[key]))
       if (network === 'TESTNET') {
         tx.setChainID(1023)
       } else if (network === 'LOCALNET') {
@@ -105,125 +105,124 @@ TxController.prototype.processTx = async function(txIdx, isAddWhitelist, iGASPri
       // }
 
       if (signMessageActionName === actionName) {
-          const waitSignMessage = memo[0];
-          let regex = /^[0-9a-zA-Z]{1,11}$/;
-          if (!(regex.test(waitSignMessage) || waitSignMessage.startsWith("IOST Signed Message:"))) {
-              this.port.forEach((port) => {
-                  port.postMessage({
-                      actionId: actionId,
-                      failed: `signMessage failure message must match '/^[0-9a-zA-Z]{12}$/' or start with "IOST Signed Message:"`
-                  });
-              })
-              return;
-          }
-          try {
-              const kp = new IOST.KeyPair(bs58.decode(encodedPrivateKey),encodedPrivateKey.length>50?2:1)
-              let codec = new Codec();
-              codec.pushString(waitSignMessage);
-              let waitSignMessageBinary = codec._buf;
-              const iostSignature = new Signature(waitSignMessageBinary, kp);
-              // {
-              //      "algorithm": "xxx",
-              //      "public_key": "xxx",
-              //      "signature: "base64 format"
-              //      "message": "message"
-              // }
-              const signatureResult = iostSignature.toJSON();
-              signatureResult['message'] = waitSignMessage;
-              this.port.forEach((port) => {
-                  port.postMessage({
-                      actionId: actionId,
-                      success: signatureResult
-                  });
-              })
-          } catch (error) {
-              this.port.forEach((port) => {
-                  port.postMessage({
-                      actionId: actionId,
-                      failed: `signMessage failure error: ${error.message}`
-                  });
-              })
-          }
-          return;
+        const waitSignMessage = memo[0]
+        let regex = /^[0-9a-zA-Z]{1,11}$/
+        if (!(regex.test(waitSignMessage) || waitSignMessage.startsWith('IOST Signed Message:'))) {
+          this.port.forEach(port => {
+            port.postMessage({
+              actionId: actionId,
+              failed: `signMessage failure message must match '/^[0-9a-zA-Z]{12}$/' or start with "IOST Signed Message:"`,
+            })
+          })
+          return
+        }
+        try {
+          const kp = new IOST.KeyPair(bs58.decode(encodedPrivateKey), encodedPrivateKey.length > 50 ? 2 : 1)
+          let codec = new Codec()
+          codec.pushString(waitSignMessage)
+          let waitSignMessageBinary = codec._buf
+          const iostSignature = new Signature(waitSignMessageBinary, kp)
+          // {
+          //      "algorithm": "xxx",
+          //      "public_key": "xxx",
+          //      "signature: "base64 format"
+          //      "message": "message"
+          // }
+          const signatureResult = iostSignature.toJSON()
+          signatureResult['message'] = waitSignMessage
+          this.port.forEach(port => {
+            port.postMessage({
+              actionId: actionId,
+              success: signatureResult,
+            })
+          })
+        } catch (error) {
+          this.port.forEach(port => {
+            port.postMessage({
+              actionId: actionId,
+              failed: `signMessage failure error: ${error.message}`,
+            })
+          })
+        }
+        return
       }
 
       const handler = iostController.iost.signAndSend(tx)
       let inverval = null
       // console.log('start')
       handler
-      .on('pending', (pending) => {
-        // console.log('pending',pending)
-        this.port.forEach((port) => {
-          port.postMessage({
-            actionId,
-            pending: pending
-          });
-        })
-        let times = 90
-        inverval = setInterval(async () => {
-          times--;
-          if(times){
-            iostController.rpc.transaction.getTxByHash(pending)
-            .then( data => {
-              const tx_receipt = data.transaction.tx_receipt
-              if(tx_receipt){
-                clearInterval(inverval);
-                if (tx_receipt.status_code === "SUCCESS") {
-                  // console.log('successBy: ', tx_receipt)
-                  this.port.forEach((port) => {
-                    port.postMessage({
-                      actionId,
-                      success: tx_receipt
-                    });
-                  })
-                } else {
-                  // console.log('failedBy: ', tx_receipt)
-                  this.port.forEach((port) => {
-                    port.postMessage({
-                      actionId,
-                      failed: tx_receipt.stack?tx_receipt.message:tx_receipt
-                    });
-                  })
+        .on('pending', pending => {
+          // console.log('pending',pending)
+          this.port.forEach(port => {
+            port.postMessage({
+              actionId,
+              pending: pending,
+            })
+          })
+          let times = 90
+          inverval = setInterval(async () => {
+            times--
+            if (times) {
+              iostController.rpc.transaction.getTxByHash(pending).then(data => {
+                const tx_receipt = data.transaction.tx_receipt
+                if (tx_receipt) {
+                  clearInterval(inverval)
+                  if (tx_receipt.status_code === 'SUCCESS') {
+                    // console.log('successBy: ', tx_receipt)
+                    this.port.forEach(port => {
+                      port.postMessage({
+                        actionId,
+                        success: tx_receipt,
+                      })
+                    })
+                  } else {
+                    // console.log('failedBy: ', tx_receipt)
+                    this.port.forEach(port => {
+                      port.postMessage({
+                        actionId,
+                        failed: tx_receipt.stack ? tx_receipt.message : tx_receipt,
+                      })
+                    })
+                  }
                 }
-              }
-            })
-          }else {
-            clearInterval(inverval);
-            this.port.forEach((port) => {
-              port.postMessage({
-                actionId,
-                failed: `Error: tx ${pending} on chain timeout.`
-              });
-            })
-          }
-        },1000)
-      })
-      .on('failed', (err) => {
-        clearInterval(inverval)
-        console.log('failed: ', err)
-        this.port.forEach((port) => {
-          port.postMessage({
-            actionId,
-            failed: err.stack?err.message:err
-          });
+              })
+            } else {
+              clearInterval(inverval)
+              this.port.forEach(port => {
+                port.postMessage({
+                  actionId,
+                  failed: `Error: tx ${pending} on chain timeout.`,
+                })
+              })
+            }
+          }, 1000)
         })
-      })
-    }else {
+        .on('failed', err => {
+          clearInterval(inverval)
+          console.log('failed: ', err)
+          this.port.forEach(port => {
+            port.postMessage({
+              actionId,
+              failed: err.stack ? err.message : err,
+            })
+          })
+        })
+    } else {
       //not find account
-      this.port.forEach((port) => {
+      this.port.forEach(port => {
         port.postMessage({
           actionId: txInfo.actionId,
-          failed: `User does not login or not exist. slotIdx: ${txIdx}`
-        });
+          failed: `User does not login or not exist. slotIdx: ${txIdx}`,
+        })
       })
     }
-  }else {
+  } else {
     //not find account
-    this.port.forEach((port) => {
+    this.port.forEach(port => {
       port.postMessage({
         actionId: txInfo.actionId,
-        failed: `User does not exist. slotIdx: ${txIdx}`
-      });
+        failed: `User does not exist. slotIdx: ${txIdx}`,
+      })
     })
   }
 
@@ -276,15 +275,15 @@ TxController.prototype.processTx = async function(txIdx, isAddWhitelist, iGASPri
   this.txQueue.splice(txIdx, 1)
 }
 
-TxController.prototype.cancelTx = function(txIdx) {
+TxController.prototype.cancelTx = function (txIdx) {
   const txInfo = this.txQueue[txIdx]
 
-  if(txInfo){
-    this.port.forEach((port) => {
+  if (txInfo) {
+    this.port.forEach(port => {
       port.postMessage({
         actionId: txInfo.actionId,
-        failed: 'User rejected the signature request'
-      });
+        failed: 'User rejected the signature request',
+      })
     })
     // setTimeout(() => {
     //   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -300,12 +299,11 @@ TxController.prototype.cancelTx = function(txIdx) {
   this.txQueue.splice(txIdx, 1)
 }
 
-function aesDecrypt(encrypted, key){
-  const decipher = crypto.createDecipher('aes192', key);
-  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-  decrypted += decipher.final('utf8');
-  return decrypted;
+function aesDecrypt(encrypted, key) {
+  const decipher = crypto.createDecipher('aes192', key)
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+  decrypted += decipher.final('utf8')
+  return decrypted
 }
-
 
 module.exports = TxController
