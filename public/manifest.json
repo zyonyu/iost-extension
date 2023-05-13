@@ -1,8 +1,8 @@
 {
-  "name": "iWallet",
+  "name": "iWallet Pro",
   "manifest_version": 3,
-  "version": "0.3.0",
-  "description": "Wallet Extension for IOST",
+  "version": "0.0.1",
+  "description": "Brand New Version Wallet Extension for lOST",
   "action": {
     "default_popup": "index.html",
     "default_title": "iWallet"
