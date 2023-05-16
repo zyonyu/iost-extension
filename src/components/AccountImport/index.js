@@ -90,7 +90,7 @@ class AccountImport extends Component<Props> {
     try {
       publicKey = privateKeyToPublicKey(privateKey)
       if (accountName) {
-        let account = await nameAndPublicKeyToAccount(accountName, publicKey, this.state.endpoint)
+        const account = await nameAndPublicKeyToAccount(accountName, publicKey, this.state.endpoint)
         const password = await user.getLockPassword()
         accounts = [
           {
@@ -99,31 +99,39 @@ class AccountImport extends Component<Props> {
             chainID: this.state.chainID,
             network: 'LOCALNET',
             privateKey: utils.aesEncrypt(privateKey, password),
-            publicKey: publicKey,
+            publicKey,
           },
         ]
       } else {
-        const [mainRlt, testRlt] = await Promise.allSettled([publickKeyToAccount(publicKey, true), publickKeyToAccount(publicKey, false)])
-        let accounts1 = mainRlt.status === 'fulfilled' ? mainRlt.value : []
-        let accounts2 = testRlt.status === 'fulfilled' ? testRlt.value : []
+        const mainRlt = await publickKeyToAccount(publicKey, true)
         const password = await user.getLockPassword()
-        accounts1 = accounts1.map(item => {
-          return {
-            name: item.account_info.name,
-            network: 'MAINNET',
-            privateKey: utils.aesEncrypt(privateKey, password),
-            publicKey: publicKey,
-          }
-        })
-        accounts2 = accounts2.map(item => {
-          return {
-            name: item.account_info.name,
-            network: 'TESTNET',
-            privateKey: utils.aesEncrypt(privateKey, password),
-            publicKey: publicKey,
-          }
-        })
-        accounts = accounts1.concat(accounts2)
+        accounts = mainRlt.map(item => ({
+          name: item.account_info.name,
+          network: 'MAINNET',
+          privateKey: utils.aesEncrypt(privateKey, password),
+          publicKey,
+        }))
+        // const [mainRlt, testRlt] = await Promise.allSettled([publickKeyToAccount(publicKey, true), publickKeyToAccount(publicKey, false)])
+        // let accounts1 = mainRlt.status === 'fulfilled' ? mainRlt.value : []
+        // let accounts2 = testRlt.status === 'fulfilled' ? testRlt.value : []
+        // const password = await user.getLockPassword()
+        // accounts1 = accounts1.map(item => {
+        //   return {
+        //     name: item.account_info.name,
+        //     network: 'MAINNET',
+        //     privateKey: utils.aesEncrypt(privateKey, password),
+        //     publicKey: publicKey,
+        //   }
+        // })
+        // accounts2 = accounts2.map(item => {
+        //   return {
+        //     name: item.account_info.name,
+        //     network: 'TESTNET',
+        //     privateKey: utils.aesEncrypt(privateKey, password),
+        //     publicKey: publicKey,
+        //   }
+        // })
+        // accounts = accounts1.concat(accounts2)
       }
     } catch (e) {
       console.log(e)
