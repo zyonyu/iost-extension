@@ -164,6 +164,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break
     case ACTION.CHANGE_ACCOUNT:
       iostController.changeAccount(message.payload)
+      txController.port.forEach(port => {
+        const account = iostController.activeAccount
+        if (account) {
+          port.postMessage({
+            actionId: 0,
+            action: message.action,
+            payload: {
+              account: {
+                name: account.name,
+                network: account.network,
+                proxyAccount: account.proxyAccount,
+              },
+              network: account.network,
+            },
+          })
+        }
+      })
       break
     case ACTION.LOGIN_SUCCESS:
       // iost login

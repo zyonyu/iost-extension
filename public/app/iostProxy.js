@@ -110,6 +110,18 @@ const IWalletJS = {
 
 window.postMessage({ action: 'GET_ACCOUNT' }, '*')
 
+let checkTimer = null
+
+function checkAccount() {
+  if (checkTimer) {
+    clearTimeout(checkTimer)
+    checkTimer = null
+  }
+  checkTimer = setTimeout(() => {
+    window.postMessage({ action: 'GET_ACCOUNT' }, '*')
+  }, 20 * 1000)
+}
+
 const mapHostToNetwork = url => {
   if (url.includes('//test.api.iost.io')) {
     return 'TESTNET'
@@ -223,6 +235,7 @@ window.addEventListener('message', e => {
       }
     } else if (messageData.payload) {
       IWalletJS.setAccount(messageData.payload)
+      checkAccount()
     }
   }
 })
