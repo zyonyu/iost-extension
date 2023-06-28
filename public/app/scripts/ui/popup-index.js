@@ -125,8 +125,9 @@ class AskPopup extends Component<Props> {
         slotIdx: this.slotIdx,
         isAddWhitelist: this.state.isAddWhitelist
       }
+    },() => {
+      window.close()
     })
-    window.close()
   }
 
   cancelTx = () => {
@@ -136,8 +137,9 @@ class AskPopup extends Component<Props> {
       payload: {
         slotIdx: this.slotIdx,
       }
+    },() => {
+      window.close()
     })
-    window.close()
   }
 
   onTransLocal = (name) => {

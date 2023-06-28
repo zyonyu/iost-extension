@@ -8,11 +8,9 @@ import { privateKeyToPublicKey } from 'utils/key'
 import utils from 'utils'
 import hash from 'hash.js'
 import './index.scss'
-import ui from "utils/ui";
+import ui from 'utils/ui'
 
-type Props = {
-
-}
+type Props = {}
 
 class Lock extends Component<Props> {
   state = {
@@ -25,13 +23,13 @@ class Lock extends Component<Props> {
     })
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
     })
   }
 
-  moveTo = (location) => () => {
+  moveTo = location => () => {
     const { changeLocation } = this.props
     ui.settingLocation(location)
     changeLocation(location)
@@ -39,34 +37,35 @@ class Lock extends Component<Props> {
 
   unlockWallet = async () => {
     const { password } = this.state
-    const getEnPassword = () => new Promise((resolve, reject) => {
-      chrome.storage.local.get(['password'],({password: en_password}) => {
-        if(en_password){
-          resolve(en_password)
-        }else{
-          reject()
-        }
+    const getEnPassword = () =>
+      new Promise((resolve, reject) => {
+        chrome.storage.local.get(['password'], ({ password: en_password }) => {
+          if (en_password) {
+            resolve(en_password)
+          } else {
+            reject()
+          }
+        })
       })
-    })
     try {
       const en_password = await getEnPassword()
       const _password = hash.sha256().update(password).digest('hex')
       // utils.aesDecrypt(en_password, password)
-      if(_password === en_password){
+      if (_password === en_password) {
         chrome.runtime.sendMessage({
           action: 'SET_PASSWORD',
           payload: {
-            password
-          }
+            password,
+          },
         })
-        chrome.storage.local.get(['accounts'], ({accounts}) => {
-          if(accounts.length){
+        chrome.storage.local.get(['accounts'], ({ accounts }) => {
+          if (accounts && accounts.length) {
             this.moveTo('/account')()
-          }else {
+          } else {
             this.moveTo('/accountImport')()
           }
-        })      
-      }else {
+        })
+      } else {
         throw new Error()
       }
     } catch (err) {
@@ -75,7 +74,7 @@ class Lock extends Component<Props> {
     }
   }
 
-  keyUnlock = (e) => {
+  keyUnlock = e => {
     if (e.keyCode == 13) {
       this.unlockWallet()
     }
@@ -94,7 +93,9 @@ class Lock extends Component<Props> {
             placeholder={I18n.t('Lock_EnterPassword')}
             onKeyDown={this.keyUnlock}
           />
-          <Button className="btn-unlockWallet" onClick={this.unlockWallet}>{I18n.t('Lock_Unlock')}</Button>
+          <Button className="btn-unlockWallet" onClick={this.unlockWallet}>
+            {I18n.t('Lock_Unlock')}
+          </Button>
         </div>
       </Fragment>
     )

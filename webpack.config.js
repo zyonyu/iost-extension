@@ -14,12 +14,7 @@ const envPath = ENV_DIR + `${process.env.NODE_ENV}`.toLowerCase() + '.env'
 module.exports = {
   devtool: 'source-map',
   mode: 'development',
-  entry: [
-    '@babel/polyfill',
-    'react-hot-loader/patch',
-    path.resolve(__dirname, 'src/index.js'),
-    'webpack-hot-middleware/client',
-  ],
+  entry: ['@babel/polyfill', 'react-hot-loader/patch', path.resolve(__dirname, 'src/index.js'), 'webpack-hot-middleware/client'],
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: '/',
@@ -46,6 +41,7 @@ module.exports = {
             {
               loader: 'sass-loader',
               options: {
+                implementation: require('sass'),
                 includePaths: [path.resolve(__dirname, 'src/styles')],
               },
             },

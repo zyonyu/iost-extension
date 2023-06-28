@@ -33,39 +33,52 @@ function listenForProviderRequest() {
           payload: data.payload,
           actionId: data.actionId,
         })
-        break;
-      case 'GET_ACCOUNT': 
-        chrome.runtime.sendMessage({
-          action: data.action,
-        },(payload) => {
-          window.postMessage({
-            message: {
-              actionId: 0,
-              payload
-            },
-          }, '*')
-        })
-        break;
+        break
+      case 'GET_ACCOUNT':
+        chrome.runtime.sendMessage(
+          {
+            action: data.action,
+          },
+          payload => {
+            window.postMessage(
+              {
+                message: {
+                  actionId: 0,
+                  action: data.action,
+                  payload,
+                },
+              },
+              '*',
+            )
+          },
+        )
+        break
       default:
     }
   })
 
-  const port = chrome.runtime.connect({name: "contentscript"});
+  const port = chrome.runtime.connect({ name: 'contentscript' })
 
-  port.onMessage.addListener((message) => {
-    window.postMessage({
-      message,
-    }, '*')
-  });
+  port.onMessage.addListener(message => {
+    window.postMessage(
+      {
+        message,
+      },
+      '*',
+    )
+  })
   port.onDisconnect.addListener(() => {
     // console.log(port)
   })
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     // From content script to webpage injected script.
-    window.postMessage({
-      message,
-    }, '*')
+    window.postMessage(
+      {
+        message,
+      },
+      '*',
+    )
   })
 }
 

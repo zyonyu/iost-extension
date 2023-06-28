@@ -51,6 +51,7 @@ module.exports = {
             {
               loader: 'sass-loader',
               options: {
+                implementation: require('sass'),
                 includePaths: [path.resolve(__dirname, 'src/styles')],
               },
             },

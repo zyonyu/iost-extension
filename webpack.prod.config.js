@@ -44,7 +44,7 @@ module.exports = {
               // options: { minimize: true },
             },
           ],
-        })
+        }),
       },
       {
         test: /\.scss$/,
@@ -57,6 +57,7 @@ module.exports = {
             {
               loader: 'sass-loader',
               options: {
+                implementation: require('sass'),
                 includePaths: [path.resolve(__dirname, 'src/styles')],
               },
             },
@@ -83,7 +84,7 @@ module.exports = {
       new UglifyJSPlugin({
         sourceMap: true,
       }),
-    ]
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -102,15 +103,16 @@ module.exports = {
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.NoEmitOnErrorsPlugin(),
     new CompressionPlugin(),
-    new CopyWebpackPlugin([{
-      from: 'static',
-      to: 'static',
-      toType: 'dir',
-    },
-    { from: 'public/manifest.json' },
-    { from: 'public/assets', to: 'assets', toType: 'dir' },
-    { from: 'public/app', to: 'app', toType: 'dir' },
-  ]),
+    new CopyWebpackPlugin([
+      {
+        from: 'static',
+        to: 'static',
+        toType: 'dir',
+      },
+      { from: 'public/manifest.json' },
+      { from: 'public/assets', to: 'assets', toType: 'dir' },
+      { from: 'public/app', to: 'app', toType: 'dir' },
+    ]),
     new Dotenv({
       path: envPath,
     }),
