@@ -5,12 +5,10 @@ import LoadingImage from 'components/LoadingImage'
 
 import './Button.scss'
 
-type Props = {
+type Props = {}
 
-}
-
-const Button = (props) => (
-  <button {...props} className={cx('Button', props.className, {'btn-account': props.account})}>
+const Button = props => (
+  <button {...props} className={cx('Button', props.className, { 'btn-account': props.account })}>
     {props.children}
     {props.isLoading && <LoadingImage />}
   </button>

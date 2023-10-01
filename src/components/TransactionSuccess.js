@@ -4,9 +4,7 @@ import cx from 'classnames'
 
 import './TransactionSuccess.scss'
 
-type Props = {
-
-}
+type Props = {}
 
 class TransactionSuccess extends Component<Props> {
   render() {
@@ -31,13 +29,20 @@ class TransactionSuccess extends Component<Props> {
         )}
         {Object.keys(tx.ram_usage).length !== 0 && (
           <p className="TransactionSuccess__item">
-            {I18n.t('ramUsage')}: {Object.values(tx.ram_usage).map(a => <p>{a}</p>)}
+            {I18n.t('ramUsage')}:{' '}
+            {Object.values(tx.ram_usage).map(a => (
+              <p>{a}</p>
+            ))}
           </p>
         )}
         {receipt && (
           <div className="TransactionSuccess__receipt">
-            <p className="TransactionSuccess__item">{I18n.t('receiptAmount')}: {receiptContent[3]}</p>
-            <p className="TransactionSuccess__item">{I18n.t('receiptContractFunctionName')}: {receipt.func_name}</p>
+            <p className="TransactionSuccess__item">
+              {I18n.t('receiptAmount')}: {receiptContent[3]}
+            </p>
+            <p className="TransactionSuccess__item">
+              {I18n.t('receiptContractFunctionName')}: {receipt.func_name}
+            </p>
           </div>
         )}
       </div>

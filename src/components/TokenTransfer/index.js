@@ -13,28 +13,26 @@ import TokenTransferSuccess from 'components/TokenTransferSuccess'
 import TokenTransferFailed from 'components/TokenTransferFailed'
 import ui from 'utils/ui'
 import utils from 'utils'
-import user from "utils/user";
+import user from 'utils/user'
 import token, { defaultAssets } from 'utils/token'
 
 import LoadingImage from 'components/LoadingImage'
 
 import './index.scss'
-import iconSrc from "constants/icon";
+import iconSrc from 'constants/icon'
 
 const defaultConfig = {
   gasRatio: 1,
   gasLimit: 100000,
   delay: 0,
   expiration: 90,
-  defaultLimit: "unlimited"
+  defaultLimit: 'unlimited',
 }
 
-type Props = {
-
-}
+type Props = {}
 
 class Index extends Component<Props> {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       to: '',
@@ -61,7 +59,7 @@ class Index extends Component<Props> {
   }
 
   getData = async () => {
-    while(this._isMounted){
+    while (this._isMounted) {
       await this.getResourceBalance()
       await utils.delay(5000)
     }
@@ -90,24 +88,25 @@ class Index extends Component<Props> {
 
   getResourceBalance = () => {
     return new Promise((resolve, reject) => {
-      iost.rpc.blockchain.getAccountInfo(iost.account.getID())
-      .then(({ balance, frozen_balances, gas_info, ram_info}) => {
-        const frozenAmount = frozen_balances.reduce((prev, next) => (prev += next.amount, prev), 0)
-        this.setState({
-          frozenAmount,
-          gas: gas_info.current_total,
-          ram: ram_info.available,
-          isLoading: false,
+      iost.rpc.blockchain
+        .getAccountInfo(iost.account.getID())
+        .then(({ balance, frozen_balances, gas_info, ram_info }) => {
+          const frozenAmount = frozen_balances.reduce((prev, next) => ((prev += next.amount), prev), 0)
+          this.setState({
+            frozenAmount,
+            gas: gas_info.current_total,
+            ram: ram_info.available,
+            isLoading: false,
+          })
+          resolve()
         })
-        resolve()
-      })
-      .catch(err => {
-        resolve()
-      })
+        .catch(err => {
+          resolve()
+        })
     })
   }
 
-  handleChange = (e) => {
+  handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value,
       errorMessage: '',
@@ -128,15 +127,20 @@ class Index extends Component<Props> {
     //   JSON.stringify([selectedTokenSymbol, accountName, to, amount, memo]),
     // )
     // tx.setTime(defaultConfig.expiration, defaultConfig.delay, 0)
-    let chainId = ((iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0) && (iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0) && (iost.rpc.getProvider()._host.indexOf('//localhost') < 0)) ? 1023 : 1024;
+    let chainId =
+      iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
+      iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
+      iost.rpc.getProvider()._host.indexOf('//localhost') < 0
+        ? 1023
+        : 1024
     if (activeAccount.network === 'LOCALNET') {
       chainId = activeAccount.chainID
     }
 
     const asset = defaultAssets.concat(assetsList).find(item => item.symbol === token)
     let contract = this.getAssetContract(asset)
-    if(chainId === 1023 && token === 'husd') {
-      contract = "ContractaTTuzpKVGHPUMdojrM88LG8DaWsdN7L1ncnpzQsA4aF"
+    if (chainId === 1023 && token === 'husd') {
+      contract = 'ContractaTTuzpKVGHPUMdojrM88LG8DaWsdN7L1ncnpzQsA4aF'
     }
     const tx = iost.iost.callABI(contract, 'transfer', [token, accountName, to, amount, memo])
 
@@ -153,14 +157,13 @@ class Index extends Component<Props> {
       tx.gasLimit = +iGASLimit
     }
 
-
     // const tx = iost.iost.transfer(selectedTokenSymbol, accountName, to, amount)
 
     // 2. Sign on transfer tx
     // iost.account.signTx(tx)
-    
-    iost.iost.setAccount(iost.account);
-    
+
+    iost.iost.setAccount(iost.account)
+
     const handler = iost.iost.signAndSend(tx)
     // console.log('handler:', handler)
 
@@ -179,18 +182,18 @@ class Index extends Component<Props> {
     // const handler = new iost.pack.TxHandler(tx, iost.rpc)
 
     this.setState({ isSending: true })
-    handler.on('pending', (res) => {
-      // .onPending(async (res) => {
+    handler
+      .on('pending', res => {
+        // .onPending(async (res) => {
         let times = 90
         const inverval = setInterval(async () => {
-          times--;
-          if(times){
-            iost.rpc.transaction.getTxByHash(res)
-            .then( data => {
+          times--
+          if (times) {
+            iost.rpc.transaction.getTxByHash(res).then(data => {
               const tx_receipt = data.transaction.tx_receipt
-              if(tx_receipt){
-                clearInterval(inverval);
-                if (tx_receipt.status_code === "SUCCESS") {
+              if (tx_receipt) {
+                clearInterval(inverval)
+                if (tx_receipt.status_code === 'SUCCESS') {
                   this.setState({ isSending: false })
                   ui.settingTransferInfo(tx_receipt)
                   this.moveTo('/tokenTransferSuccess')()
@@ -210,14 +213,14 @@ class Index extends Component<Props> {
                 }
               }
             })
-          }else {
-            clearInterval(inverval);
+          } else {
+            clearInterval(inverval)
             this.port.postMessage({
               actionId,
-              failed: `Error: tx ${res.hash} on chain timeout.`
-            });
+              failed: `Error: tx ${res.hash} on chain timeout.`,
+            })
           }
-        },1000)
+        }, 1000)
       })
       // .onSuccess(async (response) => {
       //   // clearInterval(intervalID)
@@ -228,7 +231,7 @@ class Index extends Component<Props> {
       //   //   content: <TokenTransferSuccess tx={response} />
       //   // })
       // })
-      .on('failed', (err) => {
+      .on('failed', err => {
         // clearInterval(intervalID)
         if (typeof err === 'string') {
           this.setState({
@@ -246,11 +249,11 @@ class Index extends Component<Props> {
           // })
         }
       })
-      // .send()
-      // .listen(1000, 60)
+    // .send()
+    // .listen(1000, 60)
   }
 
-  moveTo = (location) => () => {
+  moveTo = location => () => {
     const { changeLocation } = this.props
     changeLocation(location)
   }
@@ -262,47 +265,41 @@ class Index extends Component<Props> {
     changeLocation(currentLocation)
   }
 
-
   toggleMenu = () => {
     this.setState({
       isShowing: !this.state.isShowing,
     })
   }
 
-
   toggleTokenList = (symbol, balance) => {
     this.setState({
       token: symbol,
       balance,
-      isShowTokenList: false
+      isShowTokenList: false,
     })
   }
 
-
   toggleToken = () => {
     this.setState({
-      isShowTokenList: !this.state.isShowTokenList
+      isShowTokenList: !this.state.isShowTokenList,
     })
   }
 
   getAssets = () => {
-    Promise.all([
-      utils.getStorage('assets'),
-      user.getActiveAccount()
-    ]).then(([assetsList, account]) => {
-      if(assetsList){
+    Promise.all([utils.getStorage('assets'), user.getActiveAccount()]).then(([assetsList, account]) => {
+      if (assetsList) {
         this.setState({
-          assetsList: assetsList[`${account.name}-${account.network}`] || []
+          assetsList: assetsList[`${account.name}-${account.network}`] || [],
         })
       }
     })
   }
 
   getAssetContract(asset) {
-    if (typeof asset != "undefined" && asset.onlyIssuerCanTransfer && asset.issuer.startsWith("Contract")) {
-      return  asset.issuer;
+    if (typeof asset != 'undefined' && asset.onlyIssuerCanTransfer && asset.issuer.startsWith('Contract')) {
+      return asset.issuer
     }
-    return 'token.iost';
+    return 'token.iost'
   }
 
   render() {
@@ -313,86 +310,48 @@ class Index extends Component<Props> {
         <Header title={I18n.t('Account_Transfer')} onBack={this.backTo} hasSetting={false} />
         <div className="tokenTransfer-box">
           <div className="choose-token-box">
-            <label className="label">
-              {I18n.t('Transfer_Choose')}
-            </label>
-            <Input
-              name="token"
-              onChange={this.handleChange}
-              value={token.toUpperCase()}
-              className="input"
-              readOnly
-              onClick={this.toggleToken}
-            />
-            <i className={cx("icon-arrow", isShowTokenList ? "active" : '')} onClick={this.toggleToken}/>
-            <ul className={cx("token-list", isShowTokenList ? "active" : '')}>
-              {
-                defaultAssets.map(item => <li key={item.symbol}><TokenContent symbol={item.symbol} token={token} toggleTokenList={this.toggleTokenList}/></li>)
-              }
-              {
-                assetsList.map(item => <li key={item.symbol}><TokenContent symbol={item.symbol} token={token} toggleTokenList={this.toggleTokenList}/></li>)
-              }
+            <label className="label">{I18n.t('Transfer_Choose')}</label>
+            <Input name="token" onChange={this.handleChange} value={token.toUpperCase()} className="input" readOnly onClick={this.toggleToken} />
+            <i className={cx('icon-arrow', isShowTokenList ? 'active' : '')} onClick={this.toggleToken} />
+            <ul className={cx('token-list', isShowTokenList ? 'active' : '')}>
+              {defaultAssets.map(item => (
+                <li key={item.symbol}>
+                  <TokenContent symbol={item.symbol} token={token} toggleTokenList={this.toggleTokenList} />
+                </li>
+              ))}
+              {assetsList.map(item => (
+                <li key={item.symbol}>
+                  <TokenContent symbol={item.symbol} token={token} toggleTokenList={this.toggleTokenList} />
+                </li>
+              ))}
             </ul>
           </div>
-
 
           <div className="transferAmount-box">
             <span className="transferAmount">{I18n.t('Transfer_Amount')}</span>
             <span className="balance">{I18n.t('Transfer_Balance', { num: balance, token })}</span>
           </div>
-          <Input
-            name="amount"
-            onChange={this.handleChange}
-            placeholder={I18n.t('Transfer_InputAmount')}
-            className="input"
-          />
+          <Input name="amount" onChange={this.handleChange} placeholder={I18n.t('Transfer_InputAmount')} className="input" />
 
-          <label className="label">
-            {I18n.t('Transfer_Payee')}
-          </label>
-          <Input
-            name="to"
-            onChange={this.handleChange}
-            placeholder={I18n.t('Transfer_EnterName')}
-            className="input"
-          />
-          <label className="label">
-            {I18n.t('Transfer_Note')}
-          </label>
-          <Input
-            name="memo"
-            onChange={this.handleChange}
-            placeholder={I18n.t('Transfer_Optional')}
-            className="input"
-          />
+          <label className="label">{I18n.t('Transfer_Payee')}</label>
+          <Input name="to" onChange={this.handleChange} placeholder={I18n.t('Transfer_EnterName')} className="input" />
+          <label className="label">{I18n.t('Transfer_Note')}</label>
+          <Input name="memo" onChange={this.handleChange} placeholder={I18n.t('Transfer_Optional')} className="input" />
 
           <div className="transferAmount-box">
             <span className="transferAmount">{I18n.t('Transfer_Resource')}</span>
-            <span className="iGAS-price" onClick={this.toggleMenu}>{iGASPrice} iGas <i /></span>
+            <span className="iGAS-price" onClick={this.toggleMenu}>
+              {iGASPrice} iGas <i />
+            </span>
           </div>
-          {
-            isShowing && (
-              <div>
-                <Input
-                  name="iGASPrice"
-                  value={iGASPrice}
-                  onChange={this.handleChange}
-                  className="input"
-                />
-                <Input
-                  name="iGASLimit"
-                  value={iGASLimit}
-                  onChange={this.handleChange}
-                  className={cx('input', 'iGASLimit')}
-                />
-              </div>
-            )
-          }
+          {isShowing && (
+            <div>
+              <Input name="iGASPrice" value={iGASPrice} onChange={this.handleChange} className="input" />
+              <Input name="iGASLimit" value={iGASLimit} onChange={this.handleChange} className={cx('input', 'iGASLimit')} />
+            </div>
+          )}
           <div className="btn-box">
-            <Button
-              className="btn-submit"
-              onClick={this.transfer}
-            >
+            <Button className="btn-submit" onClick={this.transfer}>
               {isSending ? <LoadingImage /> : I18n.t('Transfer_Submit')}
             </Button>
             {/* <p className="transferTips">{I18n.t('Transfer_Tip')}</p> */}
@@ -404,7 +363,6 @@ class Index extends Component<Props> {
   }
 }
 
-
 class TokenContent extends Component<Props> {
   state = {
     isLoading: false,
@@ -415,16 +373,15 @@ class TokenContent extends Component<Props> {
     this.getTokenBalance()
   }
 
-
   getTokenBalance = async () => {
     const { symbol, token } = this.props
     this.setState({
-      isLoading: true
+      isLoading: true,
     })
     const { balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), symbol)
     this.setState({
       isLoading: false,
-      balance
+      balance,
     })
 
     if (symbol == token) {
@@ -438,18 +395,19 @@ class TokenContent extends Component<Props> {
     this.props.toggleTokenList(symbol, balance)
   }
 
-  render(){
+  render() {
     const { balance, isLoading } = this.state
     const { symbol } = this.props
 
-    return <span onClick={this.onSelect} className="token-item">{symbol.toUpperCase()} ({isLoading ? '-' : balance})</span>
+    return (
+      <span onClick={this.onSelect} className="token-item">
+        {symbol.toUpperCase()} ({isLoading ? '-' : balance})
+      </span>
+    )
   }
 }
 
-
-
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   locationList: state.ui.locationList,
   selectedTokenSymbol: state.token.selectedTokenSymbol,
 })

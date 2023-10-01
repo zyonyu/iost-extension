@@ -1,13 +1,11 @@
-import {
-  UPDATE_SAVED_TOKEN_SYMBOLS,
-  SELECT_TOKEN,
-} from 'actions/actionTypes'
+import { UPDATE_SAVED_TOKEN_SYMBOLS, SELECT_TOKEN, SELECT_NFT } from 'actions/actionTypes'
 
 import { DEFAULT_TOKEN_LIST } from 'constants/token'
 
 const initialState = {
   savedTokenSymbols: DEFAULT_TOKEN_LIST,
   selectedTokenSymbol: 'iost',
+  selectedNFT: '',
 }
 
 const tokenReducer = (state = initialState, action) => {
@@ -21,6 +19,11 @@ const tokenReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedTokenSymbol: action.payload.tokenSymbol,
+      }
+    case SELECT_NFT:
+      return {
+        ...state,
+        selectedNFT: action.payload.nftId,
       }
     default:
       return state

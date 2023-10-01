@@ -234,21 +234,59 @@ const iost = {
       })
 
     return fire
+  },
+  signAndSendNFT: (contractAddress, contractAction, args, chainID) => {
+    const tx = iost.iost.callABI(contractAddress, contractAction, args)
+    tx.gasLimit = 1000000
 
-    // return {
-    //   onPending: (callback) => {
-    //     fire.pending = callback
-    //     return handler
-    //   },
-    //   onSuccess: (callback) => {
-    //     fire.success = callback
-    //     return handler
-    //   },
-    //   onFailed: (callback) => {
-    //     fire.failed = callback
-    //     return handler
-    //   }
-    // }
+    let chainId =
+      iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
+      iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
+      iost.rpc.getProvider()._host.indexOf('//localhost') < 0
+        ? 1023
+        : 1024
+    if (chainID) {
+      chainId = chainID
+    }
+    tx.setChainID(chainId)
+
+    const fire = new Callback()
+    iost.iost.setAccount(iost.account)
+
+    const handler = iost.iost.signAndSend(tx)
+    let inverval = null
+    handler
+      .on('pending', pending => {
+        fire.pushMsg('pending', pending)
+
+        let times = 90
+        inverval = setInterval(async () => {
+          times--
+          if (times) {
+            iost.rpc.transaction.getTxByHash(pending).then(data => {
+              const tx_receipt = data.transaction.tx_receipt
+              if (tx_receipt) {
+                clearInterval(inverval)
+                if (tx_receipt.status_code === 'SUCCESS') {
+                  fire.pushMsg('success', tx_receipt)
+                } else {
+                  fire.pushMsg('failed', tx_receipt.stack ? tx_receipt.message : tx_receipt)
+                }
+              }
+            })
+          } else {
+            clearInterval(inverval)
+            fire.pushMsg('failed', `Error: tx ${pending} on chain timeout.`)
+          }
+        }, 1000)
+      })
+      .on('failed', err => {
+        clearInterval(inverval)
+        console.log('failed: ', err)
+        fire.pushMsg('failed', err.stack ? err.message : err)
+      })
+
+    return fire
   },
 }
 

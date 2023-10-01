@@ -1,9 +1,31 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { Login, Account, AccountImport, AccountManage, DeveloperMode, TokenTransfer, TokenTransferFailed, TokenTransferSuccess,
-  AccountQRCode, AccountCreateStep1, AccountCreateStep2, AccountCreateStep3, AccountSetting, ChangePwd,
-  Lock, AccountAdd, ChangeLanguage, IostWallet, UserAgreement, GasManage, RamManage, WhiteList, TokenDetail,
-  AssetManage
+import {
+  Login,
+  Account,
+  AccountImport,
+  AccountManage,
+  DeveloperMode,
+  TokenTransfer,
+  TokenTransferFailed,
+  TokenTransferSuccess,
+  AccountQRCode,
+  AccountCreateStep1,
+  AccountCreateStep2,
+  AccountCreateStep3,
+  AccountSetting,
+  ChangePwd,
+  Lock,
+  AccountAdd,
+  ChangeLanguage,
+  IostWallet,
+  UserAgreement,
+  GasManage,
+  RamManage,
+  WhiteList,
+  TokenDetail,
+  AssetManage,
+  NftDetail,
 } from 'components'
 import Settings from 'components/Settings'
 import Popup from 'components/Popup'
@@ -13,7 +35,7 @@ import utils from 'utils'
 import user from 'utils/user'
 import * as accountActions from 'actions/accounts'
 import './App.scss'
-import ui from "utils/ui";
+import ui from 'utils/ui'
 
 type Props = {
   children: React.DOM,
@@ -34,14 +56,14 @@ class App extends Component<Props> {
   init = async () => {
     try {
       const enpassword = await user.getEnPassword()
-      if(enpassword){
+      if (enpassword) {
         const lockState = await user.getLockState()
-        if(lockState === false){
+        if (lockState === false) {
           //解锁页面
           this.changeLocation('/lock')
-        }else {
+        } else {
           const accounts = await user.getUsers()
-          if (accounts.length){
+          if (accounts.length) {
             user.setUsers(accounts)
             const activeAccount = await user.getActiveAccount()
             const account = activeAccount || accounts[0]
@@ -55,14 +77,14 @@ class App extends Component<Props> {
             await user.setActiveAccount(account)
             this.changeLocation('/account')
 
-            chrome.storage.local.get(['activeAccount'], ({activeAccount}) => {
+            chrome.storage.local.get(['activeAccount'], ({ activeAccount }) => {
               // console.log('当前账号', activeAccount)
             })
-          }else {
+          } else {
             this.changeLocation('/accountImport')
           }
         }
-      }else {
+      } else {
         this.changeLocation('/login')
       }
     } catch (err) {
@@ -70,7 +92,7 @@ class App extends Component<Props> {
     }
   }
 
-  changeLocation = (location) => {
+  changeLocation = location => {
     this.setState({
       currentLocation: location,
     })
@@ -127,6 +149,8 @@ class App extends Component<Props> {
         return <RamManage changeLocation={this.changeLocation} />
       case '/tokenDetail':
         return <TokenDetail changeLocation={this.changeLocation} />
+      case '/nftDetail':
+        return <NftDetail changeLocation={this.changeLocation} />
       case '/assetManage':
         return <AssetManage changeLocation={this.changeLocation} />
     }
@@ -143,7 +167,7 @@ class App extends Component<Props> {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   locale: state.i18n.locale,
 })
 
