@@ -15,7 +15,7 @@ export const getTokenInfo = async (token, account) => {
     network == 'MAINNET' ? 'https://api.iost.io/' : network == 'LOCALNET' ? endpoint || 'http://127.0.0.1:30001/' : 'https://test.api.iost.io/'
   try {
     const { data } = await axios.get(`${url.endsWith('/') ? url : `${url}/`}getTokenInfo/${token}/0`, {
-      timeout: 10000,
+      timeout: 300000,
     })
     if (data.code && data.code != 0) {
       throw data.message
