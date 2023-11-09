@@ -23,11 +23,11 @@ class TokenTransferSuccess extends Component<Props> {
 
     return (
       <Fragment>
-        <Header title={isNFT ? '发送成功' : I18n.t('transferResult')} onBack={this.moveTo('/account')} hasSetting={false} />
+        <Header title={isNFT ? I18n.t('nft_send_success') : I18n.t('transferResult')} onBack={this.moveTo('/account')} hasSetting={false} />
         <div className="success-box">
           <div className="success-logo-box">
             <i className="success-logo" />
-            <p className="success-result">{isNFT ? '发送成功' : I18n.t('transferSuccess')}</p>
+            <p className="success-result">{isNFT ? I18n.t('nft_send_success') : I18n.t('transferSuccess')}</p>
           </div>
           <div className="item-box">
             <p className="item-title">{I18n.t('txid')}</p>

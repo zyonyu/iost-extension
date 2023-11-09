@@ -247,7 +247,7 @@ class Index extends Component<Props> {
             </div>
 
             <div className={cx('nft-list-wrapper', { active: tabIndex === 1 })}>
-              {nftList.length == 0 ? <div className="nft-empty">暂无数据</div> : null}
+              {nftList.length == 0 ? <div className="nft-empty">{I18n.t('nft_no_data')}</div> : null}
               {nftList.map(item => (
                 <NftContent key={item.id} name={item.name} imageUrl={item.imageUrl} goToNFTDetail={this.goToNFTDetail(item.id)} />
               ))}

@@ -157,17 +157,17 @@ class TokenDetail extends Component<Props> {
               <div className="logo-box">
                 <img className="logo" src={nftInfo.imageUrl} alt="" />
               </div>
-              <div className="title">拥有者</div>
+              <div className="title">{I18n.t('nft_owner')}</div>
               <div className="value">{nftInfo.owner}</div>
-              <div className="title">名字</div>
+              <div className="title">{I18n.t('nft_name')}</div>
               <div className="value">{nftInfo.name}</div>
-              <div className="title">种类</div>
+              <div className="title">{I18n.t('nft_type')}</div>
               <div className="value">{nftInfo.category}</div>
-              <div className="title">详情</div>
+              <div className="title">{I18n.t('nft_description')}</div>
               <div className="value desc">{lang === 'zh' ? nftInfo.desc_zh : nftInfo.desc_en}</div>
               {nftInfo.owner === account ? (
                 <Button className="btn-nft-send" onClick={this.showSendModal} disabled={sendLoading}>
-                  发送
+                  {I18n.t('nft_send')}
                 </Button>
               ) : null}
             </div>
@@ -175,10 +175,10 @@ class TokenDetail extends Component<Props> {
         )}
         <Modal title="" visible={sendVisible} onClose={this.onCloseModal} DialogClass="send-nft-modal-wrapper">
           <div className="send-nft-container">
-            <div className="modal-title">发送</div>
-            <Input value={receiver} name="receiver" placeholder="接收人" className="input-address" onChange={this.handleChange} />
+            <div className="modal-title">{I18n.t('nft_send')}</div>
+            <Input value={receiver} name="receiver" placeholder={I18n.t('nft_receiver')} className="input-address" onChange={this.handleChange} />
             <Button className="btn-confirm" disabled={receiver == ''} onClick={this.sendNft}>
-              {sendLoading ? <LoadingImage /> : '发送'}
+              {sendLoading ? <LoadingImage /> : I18n.t('nft_send')}
             </Button>
           </div>
         </Modal>
