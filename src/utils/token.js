@@ -32,7 +32,7 @@ export const defaultAssets = [
   { symbol: 'iost', fullName: 'iost', onlyIssuerCanTransfer: false },
   { symbol: 'husd', fullName: 'IOST-Peg HUSD Token', onlyIssuerCanTransfer: true, issuer: 'Contract3zCNX76rb3LkiAamGxCgBRCNn6C5fXJLaPPhZu2kagY3' },
   { symbol: 'lol', fullName: 'LOL', onlyIssuerCanTransfer: false },
-  { symbol: 'abct', fullName: 'iostabc token', onlyIssuerCanTransfer: false },
+  // { symbol: 'abct', fullName: 'iostabc token', onlyIssuerCanTransfer: false },
 ]
 
 export const nftContactId = 'ContractBZ5HHacSeUJNF3CorAKv3izB29NcnSFvPDTQmqcECHjT'

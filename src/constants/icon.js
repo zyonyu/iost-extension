@@ -1,5 +1,5 @@
 const iconSrc = {
-  url: 'https://www.iostabc.com/static/images/',
+  url: 'https://www.iostscan.com/static/images/',
   iost: '/static/images/icon-token-iost.png',
   husd: '/static/images/icon-token-husd.png',
   lol: '/static/images/icon-token-lol.png',
@@ -16,6 +16,5 @@ const iconSrc = {
   don: '/static/images/icon-token-don.png',
   default: '/static/images/icon-token-default.png',
 }
-
 
 export default iconSrc

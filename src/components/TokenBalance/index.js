@@ -173,7 +173,7 @@ class Index extends Component<Props> {
     const url = account
       ? `${
           account.network == 'MAINNET'
-            ? 'https://www.iostabc.com'
+            ? 'https://www.iostscan.com'
             : account.network == 'LOCALNET'
             ? account.endpoint || 'http://localhost:30001'
             : 'http://54.249.186.224'

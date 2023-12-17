@@ -1,7 +1,7 @@
 {
   "name": "iWallet Pro",
   "manifest_version": 3,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Brand New Version Wallet Extension for lOST",
   "action": {
     "default_popup": "index.html",
