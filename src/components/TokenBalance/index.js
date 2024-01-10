@@ -113,11 +113,6 @@ class Index extends Component<Props> {
     this.props.moveTo('/tokenDetail')()
   }
 
-  goToNFTDetail = id => () => {
-    token.selectNft(id)
-    this.props.moveTo('/nftDetail')()
-  }
-
   getAssets = () => {
     Promise.all([utils.getStorage('assets'), user.getActiveAccount()]).then(([assetsList, account]) => {
       if (assetsList) {
@@ -138,26 +133,9 @@ class Index extends Component<Props> {
         by_longest_chain: true,
       })
       .then(data => JSON.parse(data.data))
-    if (result && result.nfts.length > 0) {
-      const list = await Promise.all(
-        result.nfts.map(id =>
-          iost.rpc.blockchain._provider
-            .send('post', 'getContractStorage', {
-              id: nftContactId,
-              key: `token_${id}`,
-              by_longest_chain: true,
-            })
-            .then(data => JSON.parse(data.data)),
-        ),
-      )
-      this.setState({
-        nftList: list.map(item => ({
-          id: item.id,
-          name: item.name,
-          imageUrl: item.imageUrl,
-        })),
-      })
-    }
+    this.setState({
+      nftList: result.nfts,
+    })
   }
 
   onTabIndexChange = index => {
@@ -248,8 +226,8 @@ class Index extends Component<Props> {
 
             <div className={cx('nft-list-wrapper', { active: tabIndex === 1 })}>
               {nftList.length == 0 ? <div className="nft-empty">{I18n.t('nft_no_data')}</div> : null}
-              {nftList.map(item => (
-                <NftContent key={item.id} name={item.name} imageUrl={item.imageUrl} goToNFTDetail={this.goToNFTDetail(item.id)} />
+              {nftList.map(id => (
+                <NftContent key={id} id={id} moveTo={moveTo} />
               ))}
             </div>
 
@@ -317,13 +295,71 @@ class TokenContent extends Component<Props> {
 }
 
 class NftContent extends Component<Props> {
-  render() {
-    const { id, name, imageUrl, goToNFTDetail } = this.props
+  state = {
+    name: '',
+    isLoading: true,
+    imageUrl: '',
+  }
 
+  componentDidMount() {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.intersectionRatio) {
+        this.getNft()
+      } else {
+        this.handleCancel()
+      }
+    })
+    observer.observe(this.containerRef)
+  }
+
+  componentWillUnmount() {
+    this.handleCancel()
+  }
+
+  handleCancel() {
+    this.timer && clearTimeout(this.timer)
+  }
+
+  goToNFTDetail = () => {
+    token.selectNft(this.props.id)
+    this.props.moveTo('/nftDetail')()
+  }
+
+  getNft() {
+    if (!this.state.isLoading) return
+    this.handleCancel()
+    this.timer = setTimeout(() => {
+      iost.rpc.blockchain._provider
+        .send('post', 'getContractStorage', {
+          id: nftContactId,
+          key: `token_${this.props.id}`,
+          by_longest_chain: true,
+        })
+        .then(data => JSON.parse(data.data))
+        .then(rlt => {
+          this.setState({
+            name: rlt.name,
+            imageUrl: rlt.imageUrl,
+            isLoading: false,
+          })
+        })
+    }, 150)
+  }
+
+  render() {
+    const { name, imageUrl, isLoading } = this.state
+    if (isLoading) {
+      return (
+        <div ref={containerRef => (this.containerRef = containerRef)} className="nft-item skeleton">
+          <div className="img"></div>
+          <span className="name"></span>
+        </div>
+      )
+    }
     return (
-      <div className="nft-item" onClick={goToNFTDetail}>
-        <img src={imageUrl} alt={name} />
-        <span>{name}</span>
+      <div ref={containerRef => (this.containerRef = containerRef)} className="nft-item" onClick={this.goToNFTDetail}>
+        <img className="img" src={imageUrl} alt={name} />
+        <span className="name">{name}</span>
       </div>
     )
   }
