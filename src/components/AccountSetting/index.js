@@ -9,10 +9,11 @@ import './index.scss'
 const settingList = [
   { id: 1, name: 'accountManage' },
   { id: 2, name: 'changeLanguage' },
-  { id: 3, name: 'changePwd' },
-  { id: 4, name: 'lock' },
-  { id: 5, name: 'whitelist' },
-  { id: 6, name: 'iostWallet' },
+  { id: 3, name: 'changeNode' },
+  { id: 4, name: 'changePwd' },
+  { id: 5, name: 'lock' },
+  { id: 6, name: 'whitelist' },
+  { id: 7, name: 'iostWallet' },
   // { id: 7, name: 'assetManage' },
 ]
 type Props = {

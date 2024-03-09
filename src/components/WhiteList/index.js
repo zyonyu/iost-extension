@@ -66,7 +66,9 @@ export default class extends Component {
     try {
       const ipassword = await user.getLockPassword()
       if(ipassword){
-        iost.changeNetwork(utils.getNetWork(account))
+        const nodeRpc = await utils.getCurrentNode(account)
+
+        iost.changeNetwork(nodeRpc)
 
         iost.changeAccount(account)
         this.setState({

@@ -66,8 +66,8 @@ const DEFAULT_IOST_CONFIG = {
   delay: 0,
 }
 
-const IOST_NODE_URL = 'https://api.iost.io' //当前节点
-const IOST_TEST_NODE_URL = 'https://test.api.iost.io' //当前节点
+let IOST_NODE_URL = 'https://api.iost.io' //current node
+const IOST_TEST_NODE_URL = 'https://test.api.iost.io'
 const IWalletJS = {
   newIOST: IOST => {
     IWalletJS.pack = IOST
@@ -109,6 +109,7 @@ const IWalletJS = {
 }
 
 window.postMessage({ action: 'GET_ACCOUNT' }, '*')
+window.postMessage({ action: 'GET_NETWORK' }, '*')
 
 let checkTimer = null
 
@@ -127,7 +128,7 @@ const mapHostToNetwork = url => {
     return 'TESTNET'
   }
 
-  if (url.includes('//api.iost.io')) {
+  if (url.includes('//api.iost.io') || url === IOST_NODE_URL) {
     return 'MAINNET'
   }
 
@@ -139,7 +140,10 @@ function signAndSend(tx) {
   const actionId = uuidv4()
   const cb = new Callback()
   const action = tx.actions[0]
-  const network = mapHostToNetwork(this.currentRPC._provider._host)
+  let network = mapHostToNetwork(this.currentRPC._provider._host)
+  if (IWalletJS.account && IWalletJS.account.network === 'LOCALNET') {
+    network = 'LOCALNET'
+  }
   const message = {
     action: ACTION.TX_ASK,
     actionId: actionId,
@@ -192,6 +196,9 @@ function signMessage(message) {
   const actionId = uuidv4()
 
   const network = mapHostToNetwork(this.currentRPC._provider._host)
+  if (IWalletJS.account && IWalletJS.account.network === 'LOCALNET') {
+    network = 'LOCALNET'
+  }
   const windowMessage = {
     action: ACTION.TX_ASK,
     actionId: actionId,
@@ -218,24 +225,49 @@ function signMessage(message) {
 window.addEventListener('message', e => {
   if (e.source !== window) return
   const messageData = e.data && e.data.message
-  if (messageData && messageData.actionId !== undefined) {
-    const fire = actionMap[messageData.actionId]
-    if (fire) {
-      if (messageData.pending) {
-        fire.pushMsg('pending', messageData.pending)
-        // fire.pending(messageData.pending)
-      } else if (messageData.success) {
-        fire.pushMsg('success', messageData.success)
-        // fire.success(messageData.success)
-        delete actionMap[messageData.actionId]
-      } else if (messageData.failed) {
-        fire.pushMsg('failed', messageData.failed)
-        // fire.failed(messageData.failed)
-        delete actionMap[messageData.actionId]
+  if (messageData) {
+    if (messageData.actionId !== undefined) {
+      const fire = actionMap[messageData.actionId]
+      if (fire) {
+        if (messageData.pending) {
+          fire.pushMsg('pending', messageData.pending)
+          // fire.pending(messageData.pending)
+        } else if (messageData.success) {
+          fire.pushMsg('success', messageData.success)
+          // fire.success(messageData.success)
+          delete actionMap[messageData.actionId]
+        } else if (messageData.failed) {
+          fire.pushMsg('failed', messageData.failed)
+          // fire.failed(messageData.failed)
+          delete actionMap[messageData.actionId]
+        }
       }
-    } else if (messageData.payload) {
-      IWalletJS.setAccount(messageData.payload)
-      checkAccount()
+    }
+    if (messageData.payload) {
+      switch (messageData.action) {
+        case 'GET_ACCOUNT':
+          IWalletJS.setAccount(messageData.payload)
+          checkAccount()
+          break
+        case 'GET_NETWORK':
+          {
+            const url = messageData.payload.network
+            IOST_NODE_URL = url
+          }
+          break
+        case 'CHANGE_NETWORK':
+          {
+            const url = messageData.payload.network
+            IOST_NODE_URL = url
+            const IOST_PROVIDER = new IOST.HTTPProvider(url)
+            IWalletJS.rpc = new IOST.RPC(IOST_PROVIDER)
+            IWalletJS.iost.setRPC(IWalletJS.rpc)
+            IWalletJS.iost.rpc = IWalletJS.rpc
+          }
+          break
+        default:
+          break
+      }
     }
   }
 })

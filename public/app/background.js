@@ -161,6 +161,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       break
     case ACTION.CHANGE_NETWORK:
       iostController.changeNetwork(message.payload.url)
+      txController.port.forEach(port => {
+        port.postMessage({
+          action: message.action,
+          payload: {
+            network: message.payload.url,
+          },
+        })
+      })
       break
     case ACTION.CHANGE_ACCOUNT:
       iostController.changeAccount(message.payload)
@@ -224,6 +232,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               network: 'MAINNET',
             })
       }
+      break
+    case 'GET_NETWORK':
+      sendResponse({
+        network: iostController.network,
+      })
       break
     case 'CHECK_CREATE_ACCOUNT':
       iostController.checkCreateAccount(message.payload)

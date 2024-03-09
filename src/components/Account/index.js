@@ -46,14 +46,15 @@ class Account extends Component<Props> {
     const { changeLocation } = this.props
     try {
       const accounts = await user.getUsers()
-      if(accounts.length){
+      if (accounts.length) {
         user.setUsers(accounts)
         const activeAccount = await user.getActiveAccount()
         const account = activeAccount || accounts[0]
         const { type, name, privateKey } = account
         const password = await user.getLockPassword()
-        if(password){
-          iost.changeNetwork(utils.getNetWork(account))
+        if (password) {
+          const nodeRpc = await utils.getCurrentNode(account)
+          iost.changeNetwork(nodeRpc)
           // const encodedPrivateKey = utils.aesDecrypt(privateKey, password)
           // iost.loginAccount(name, encodedPrivateKey)
 
@@ -64,7 +65,7 @@ class Account extends Component<Props> {
             currentAccount: account,
           })
         }
-      }else {
+      } else {
         changeLocation('/accountImport')
       }
     } catch (err) {
@@ -78,7 +79,7 @@ class Account extends Component<Props> {
     changeLocation('/login')
   }
 
-  moveTo = (location) => () => {
+  moveTo = location => () => {
     const { changeLocation, locationList } = this.props
     ui.settingLocation(location)
     changeLocation(location)
@@ -90,12 +91,13 @@ class Account extends Component<Props> {
     })
   }
 
-  chooseAccount = (account) => async () => {
+  chooseAccount = account => async () => {
     // const { type, name, privateKey, publicKey, network } = account
     try {
       const ipassword = await user.getLockPassword()
-      if(ipassword){
-        iost.changeNetwork(utils.getNetWork(account))
+      if (ipassword) {
+        const nodeRpc = await utils.getCurrentNode(account)
+        iost.changeNetwork(nodeRpc)
         // const encodedPrivateKey = utils.aesDecrypt(privateKey, ipassword)
         // iost.changeNetwork(utils.getNetWork(account.network))
         // iost.loginAccount(name, encodedPrivateKey)
@@ -107,12 +109,10 @@ class Account extends Component<Props> {
         })
         // console.log('switch account')
         this.toggleAccountList()
-      }else {
+      } else {
         // lock
       }
-    } catch (err) {
-
-    }
+    } catch (err) {}
   }
 
   render() {

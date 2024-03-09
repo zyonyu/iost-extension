@@ -29,7 +29,8 @@ class RamTrade extends Component<Props> {
   intervalID = null
 
   componentDidMount() {
-    this.intervalID = setInterval(this.getRAMInfo, 1000)
+    getRAMInfo()
+    this.intervalID = setInterval(this.getRAMInfo, 5000)
   }
 
   componentWillUnmount() {

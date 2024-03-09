@@ -22,6 +22,7 @@ import ChangePwd from './ChangePwd'
 import Lock from './Lock'
 import AccountAdd from './AccountAdd'
 import ChangeLanguage from './ChangeLanguage'
+import ChangeNode from './ChangeNode'
 import IostWallet from './IostWallet'
 import UserAgreement from './UserAgreement'
 import GasManage from './GasManage'
@@ -56,6 +57,7 @@ export {
   Lock,
   AccountAdd,
   ChangeLanguage,
+  ChangeNode,
   IostWallet,
   UserAgreement,
   RamManage,

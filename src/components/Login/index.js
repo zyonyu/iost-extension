@@ -99,8 +99,9 @@ class Login extends Component<Props> {
       this.throwErrorMessage()
       return
     }
+    const nodeRpc = await utils.getCurrentNode(account)
 
-    iost.changeNetwork(utils.getNetWork(account))
+    iost.changeNetwork(nodeRpc)
     iost.rpc.blockchain.getAccountInfo(account)
       .then((accountInfo) => {
         if (!iost.isValidAccount(accountInfo, publicKey)) {

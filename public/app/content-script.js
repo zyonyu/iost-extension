@@ -53,6 +53,24 @@ function listenForProviderRequest() {
           },
         )
         break
+      case 'GET_NETWORK':
+        chrome.runtime.sendMessage(
+          {
+            action: data.action,
+          },
+          payload => {
+            window.postMessage(
+              {
+                message: {
+                  action: data.action,
+                  payload,
+                },
+              },
+              '*',
+            )
+          },
+        )
+        break
       default:
     }
   })

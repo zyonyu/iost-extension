@@ -127,12 +127,13 @@ class Index extends Component<Props> {
     //   JSON.stringify([selectedTokenSymbol, accountName, to, amount, memo]),
     // )
     // tx.setTime(defaultConfig.expiration, defaultConfig.delay, 0)
-    let chainId =
-      iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
-      iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
-      iost.rpc.getProvider()._host.indexOf('//localhost') < 0
-        ? 1023
-        : 1024
+    let chainId = iost.rpc.getProvider()._host.indexOf('//test.api.iost.io') > -1 ? 1023 : 1024
+    // let chainId =
+    //   iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
+    //   iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
+    //   iost.rpc.getProvider()._host.indexOf('//localhost') < 0
+    //     ? 1023
+    //     : 1024
     if (activeAccount.network === 'LOCALNET') {
       chainId = activeAccount.chainID
     }

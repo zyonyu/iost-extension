@@ -70,6 +70,7 @@ const enTranslation = {
   Settings_Title: 'Settings',
   Settings_accountManage: 'Manage Account',
   Settings_changeLanguage: 'Change Language',
+  Settings_changeNode: 'Switch Node',
   Settings_changePwd: 'Change Password',
   Settings_lock: 'Lock now',
   Settings_whitelist: 'Whitelist',
@@ -172,6 +173,16 @@ const enTranslation = {
   nft_receiver: 'Receiver',
   nft_send_success: 'Sent Successfully',
   nft_no_data: 'No data found',
+
+  ChangeNode_Invalid_Address: '请输入正确的地址',
+  ChangeNode_Node_Exist: '节点已存在',
+  ChangeNode_Default_Node: '默认节点',
+  ChangeNode_Error: '出错了',
+  ChangeNode_Head_Block: '区块高度',
+  ChangeNode_Custom_Node: '自定义节点',
+  ChangeNode_Add_Custom_Node: '添加自定义节点',
+  ChangeNode_Enter_Address: '请输入地址',
+  ChangeNode_Confirm: '确定',
 }
 
 //   "Transfer_Balance": "余额：%{num} %{token}",
@@ -248,6 +259,7 @@ const zhTranslation = {
   Settings_Title: '设置',
   Settings_accountManage: '账号管理',
   Settings_changeLanguage: '更改语言',
+  Settings_changeNode: '切换节点',
   Settings_changePwd: '修改密码',
   Settings_lock: '立即锁定',
   Settings_whitelist: '白名单',
@@ -354,6 +366,16 @@ const zhTranslation = {
   nft_receiver: '接收人',
   nft_send_success: '发送成功',
   nft_no_data: '暂无数据',
+
+  ChangeNode_Invalid_Address: '请输入正确的地址',
+  ChangeNode_Node_Exist: '节点已存在',
+  ChangeNode_Default_Node: '默认节点',
+  ChangeNode_Error: '出错了',
+  ChangeNode_Head_Block: '区块高度',
+  ChangeNode_Custom_Node: '自定义节点',
+  ChangeNode_Add_Custom_Node: '添加自定义节点',
+  ChangeNode_Enter_Address: '请输入地址',
+  ChangeNode_Confirm: '确定',
 }
 
 const koTranslation = {
@@ -429,6 +451,7 @@ const koTranslation = {
   Settings_Title: '설정',
   Settings_accountManage: '계정 관리',
   Settings_changeLanguage: '언어 변경',
+  Settings_changeNode: '스위치 노드',
   Settings_changePwd: '비밀번호 변경',
   Settings_lock: '지금 잠구기',
   Settings_whitelist: '화이트리스트',
@@ -531,6 +554,16 @@ const koTranslation = {
   nft_receiver: '입금',
   nft_send_success: '성공적으로 전송 되었습니다',
   nft_no_data: '찾을 수 있는 데이터가 없습니다',
+
+  ChangeNode_Invalid_Address: '请输入正确的地址',
+  ChangeNode_Node_Exist: '节点已存在',
+  ChangeNode_Default_Node: '默认节点',
+  ChangeNode_Error: '出错了',
+  ChangeNode_Head_Block: '区块高度',
+  ChangeNode_Custom_Node: '自定义节点',
+  ChangeNode_Add_Custom_Node: '添加自定义节点',
+  ChangeNode_Enter_Address: '请输入地址',
+  ChangeNode_Confirm: '确定',
 }
 
 const jaTranslation = {
@@ -605,6 +638,7 @@ const jaTranslation = {
   Settings_Title: '設定',
   Settings_accountManage: 'アカウント管理',
   Settings_changeLanguage: '言語変更',
+  Settings_changeNode: 'スイッチノード',
   Settings_changePwd: 'パスワード変更',
   Settings_lock: 'ウォレットをロック',
   Settings_whitelist: 'ホワイトリスト',
@@ -707,6 +741,16 @@ const jaTranslation = {
   nft_receiver: '受信者',
   nft_send_success: '送信済み',
   nft_no_data: 'データなし',
+
+  ChangeNode_Invalid_Address: '请输入正确的地址',
+  ChangeNode_Node_Exist: '节点已存在',
+  ChangeNode_Default_Node: '默认节点',
+  ChangeNode_Error: '出错了',
+  ChangeNode_Head_Block: '区块高度',
+  ChangeNode_Custom_Node: '自定义节点',
+  ChangeNode_Add_Custom_Node: '添加自定义节点',
+  ChangeNode_Enter_Address: '请输入地址',
+  ChangeNode_Confirm: '确定',
 }
 
 export default {

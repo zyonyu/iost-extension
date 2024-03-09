@@ -79,7 +79,8 @@ TxController.prototype.processTx = async function (txIdx, isAddWhitelist, iGASPr
     const acc = accounts.find(item => item.name == account.name && item.network == network)
     if (acc) {
       const encodedPrivateKey = aesDecrypt(acc.privateKey, this.state.password)
-      const url = network === 'LOCALNET' ? acc.endpoint : network === 'MAINNET' ? IOST_NODE_URL : IOST_TEST_NODE_URL
+    const currentNode = await getStorage('currentNode', IOST_NODE_URL)
+    const url = network === 'LOCALNET' ? acc.endpoint : network === 'MAINNET' ? currentNode : IOST_TEST_NODE_URL
       await iostController.changeNetwork(url)
       iostController.loginAccount(account.name, encodedPrivateKey)
       const tx = new iostController.pack.Tx()

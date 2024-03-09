@@ -18,6 +18,7 @@ import {
   Lock,
   AccountAdd,
   ChangeLanguage,
+  ChangeNode,
   IostWallet,
   UserAgreement,
   GasManage,
@@ -40,6 +41,9 @@ import ui from 'utils/ui'
 type Props = {
   children: React.DOM,
 }
+
+const initPage = '/account'
+
 // /var/www/iost-helloworld-dapp/dist
 class App extends Component<Props> {
   state = {
@@ -70,12 +74,13 @@ class App extends Component<Props> {
             const { type, name, privateKey } = account
             const password = await user.getLockPassword()
             const encodedPrivateKey = utils.aesDecrypt(privateKey, password)
-            iost.changeNetwork(utils.getNetWork(account))
+            const nodeRpc = await utils.getCurrentNode(account)
+            iost.changeNetwork(nodeRpc)
             // this.changeLocation('/gasManage')
 
             iost.changeAccount(account)
             await user.setActiveAccount(account)
-            this.changeLocation('/account')
+            this.changeLocation(initPage)
 
             chrome.storage.local.get(['activeAccount'], ({ activeAccount }) => {
               // console.log('当前账号', activeAccount)
@@ -135,6 +140,8 @@ class App extends Component<Props> {
         return <AccountAdd changeLocation={this.changeLocation} />
       case '/changeLanguage':
         return <ChangeLanguage changeLocation={this.changeLocation} />
+      case '/changeNode':
+        return <ChangeNode changeLocation={this.changeLocation} />
       case '/whitelist':
         return <WhiteList changeLocation={this.changeLocation} />
       case '/developerMode':

@@ -61,8 +61,9 @@ class AccountManage extends Component<Props> {
       if (accounts.length) {
         const account = accounts[0]
         // reset current account
+        const nodeRpc = await utils.getCurrentNode(account)
 
-        iost.changeNetwork(utils.getNetWork(account))
+        iost.changeNetwork(nodeRpc)
         // iost.loginAccount(account.name, account.publicKey)
         iost.changeAccount(account)
         user.setActiveAccount(account)

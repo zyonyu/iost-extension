@@ -80,7 +80,8 @@ class Index extends Component<Props> {
     return new Promise(async (resolve, reject) => {
       const { account } = props
       try {
-        iost.changeNetwork(utils.getNetWork(account))
+        const nodeRpc = await utils.getCurrentNode(account)
+        iost.changeNetwork(nodeRpc)
         const { balance, frozen_balances, gas_info, ram_info } = await iost.rpc.blockchain.getAccountInfo(account.name)
         const frozenAmount = frozen_balances.reduce((prev, next) => ((prev += next.amount), prev), 0)
         this.setState({

@@ -128,12 +128,14 @@ const iost = {
     // tx.addApprove("*", "unlimited")
     tx.addApprove('iost', +args[2])
 
-    let chainId =
-      iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
-      iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
-      iost.rpc.getProvider()._host.indexOf('//localhost') < 0
-        ? 1023
-        : 1024
+    let chainId = iost.rpc.getProvider()._host.indexOf('//test.api.iost.io') > -1 ? 1023 : 1024
+
+    // let chainId =
+    //   iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
+    //   iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
+    //   iost.rpc.getProvider()._host.indexOf('//localhost') < 0
+    //     ? 1023
+    //     : 1024
     if (chainID) {
       chainId = chainID
     }
@@ -186,12 +188,14 @@ const iost = {
       tx.addApprove('iost', +args[2])
     }
 
-    let chainId =
-      iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
-      iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
-      iost.rpc.getProvider()._host.indexOf('//localhost') < 0
-        ? 1023
-        : 1024
+    let chainId = iost.rpc.getProvider()._host.indexOf('//test.api.iost.io') > -1 ? 1023 : 1024
+
+    // let chainId =
+    //   iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
+    //   iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
+    //   iost.rpc.getProvider()._host.indexOf('//localhost') < 0
+    //     ? 1023
+    //     : 1024
     if (chainID) {
       chainId = chainID
     }
@@ -239,12 +243,14 @@ const iost = {
     const tx = iost.iost.callABI(contractAddress, contractAction, args)
     tx.gasLimit = 1000000
 
-    let chainId =
-      iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
-      iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
-      iost.rpc.getProvider()._host.indexOf('//localhost') < 0
-        ? 1023
-        : 1024
+    let chainId = iost.rpc.getProvider()._host.indexOf('//test.api.iost.io') > -1 ? 1023 : 1024
+
+    // let chainId =
+    //   iost.rpc.getProvider()._host.indexOf('//api.iost.io') < 0 &&
+    //   iost.rpc.getProvider()._host.indexOf('//127.0.0.1') < 0 &&
+    //   iost.rpc.getProvider()._host.indexOf('//localhost') < 0
+    //     ? 1023
+    //     : 1024
     if (chainID) {
       chainId = chainID
     }

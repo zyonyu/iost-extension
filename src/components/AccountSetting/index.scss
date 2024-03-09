@@ -45,6 +45,10 @@
           height: 25*0.8px;
           background-image: url("/static/images/icon-whitelist.png");
         }
+        &.changeNode {
+          height: 25*0.8px;
+          background-image: url("/static/images/icon-changeNode.png");
+        }
         &.iostWallet {
           height: 19*0.8px;
           background-image: url("/static/images/icon-iostWallet.png");
