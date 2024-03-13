@@ -144,13 +144,16 @@ class ChangeRpc extends Component<Props> {
 
     utils.setCurrentNode(url)
     iost.changeNetwork(url)
-    this.setState({
-      currentNode: url,
-      customList: newList,
-    })
-    setTimeout(() => {
-      this.getBlockAndTime()
-    }, 0)
+    this.setState(
+      {
+        currentNode: url,
+        customList: newList,
+        inputVisible: false,
+      },
+      () => {
+        this.getBlockAndTime()
+      },
+    )
   }
 
   onNodeChange = e => {
