@@ -59,10 +59,14 @@ class ChangeRpc extends Component<Props> {
 
   getCustomList = () => {
     utils.getCustomNodeList().then(list => {
-      this.setState({
-        customList: list,
-      })
-      this.getBlockAndTime()
+      this.setState(
+        {
+          customList: list,
+        },
+        () => {
+          this.getBlockAndTime()
+        },
+      )
     })
   }
 
@@ -93,7 +97,7 @@ class ChangeRpc extends Component<Props> {
         })
         .catch(err => {
           this.setState({
-            speedMap: { ...this.state.speedMap, [elem.url]: -1 },
+            speedMap: { ...this.state.speedMap, [url]: -1 },
           })
         })
     })
@@ -139,6 +143,7 @@ class ChangeRpc extends Component<Props> {
       Toast.html(I18n.t('ChangeNode_Node_Exist'))
       return
     }
+    // const data = await utils.getHeadBlockAndTime(url)
     const newList = [...customList, url]
     utils.setCustomNodeList(newList)
 
