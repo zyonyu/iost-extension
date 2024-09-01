@@ -2,7 +2,8 @@ import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import { I18n } from 'react-redux-i18n'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { Header, Modal, Toast } from 'components'
+import { Header, Modal, Toast, LoadingImage, Input } from 'components'
+import Button from 'components/Button'
 import classnames from 'classnames'
 import iost from 'iostJS/iost'
 import bs58 from 'bs58'
@@ -10,6 +11,8 @@ import * as accountActions from 'actions/accounts'
 import utils from 'utils'
 import ui from 'utils/ui'
 import user from 'utils/user'
+import store from '../../store'
+import hash from 'hash.js'
 import './index.scss'
 
 const { Modal1 } = Modal
@@ -17,6 +20,11 @@ const { Modal1 } = Modal
 class AccountManage extends Component<Props> {
   state = {
     password: undefined,
+    pwdModelVisible: false,
+    keyPwd: '',
+    loading: false,
+    hidePassword: true,
+    current: null,
   }
 
   componentDidMount() {
@@ -80,9 +88,67 @@ class AccountManage extends Component<Props> {
     ui.toggleModal()
   }
 
+  showPrivateKey = item => () => {
+    this.setState({
+      pwdModelVisible: true,
+      current: item,
+    })
+  }
+
+  handleKeyPwdChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  onCloseModal = () => {
+    this.setState({
+      pwdModelVisible: false,
+    })
+  }
+
+  moveTo = location => () => {
+    const { changeLocation, locationList } = this.props
+    ui.settingLocation(location)
+    changeLocation(location)
+  }
+
+  handlePrivateKey = async () => {
+    const { keyPwd: currentPwd } = this.state
+    const en_password = await user.getEnPassword()
+    const _password = hash.sha256().update(currentPwd).digest('hex')
+    if (_password === en_password) {
+      const { current: account } = this.state
+      store.dispatch(
+        accountActions.setTempAccount({
+          name: account.name,
+          network: account.network,
+          publicKey: account.publicKey,
+          privateKey: utils.aesDecrypt(account.privateKey, currentPwd),
+        }),
+      )
+      this.moveTo('/privateKey')()
+    } else {
+      Toast.html(I18n.t('ChangePassword_Wrong'))
+    }
+  }
+
+  toggleHidePassword = () => {
+    this.setState({
+      hidePassword: !this.state.hidePassword,
+    })
+  }
+
+  onKeyDown = e => {
+    if (e.keyCode == 13) {
+      this.handlePrivateKey()
+    }
+  }
+
   render() {
+    const { pwdModelVisible, password, keyPwd, loading, hidePassword } = this.state
     const { accounts } = this.props
-    if (!this.state.password) {
+    if (!password) {
       return null
     }
     return (
@@ -109,6 +175,7 @@ class AccountManage extends Component<Props> {
                     <CopyToClipboard onCopy={this.onCopy} text={item.publicKey}>
                       <i className="copy" />
                     </CopyToClipboard>
+                    <i className="key" onClick={this.showPrivateKey(item)} />
                   </span>
                 </div>
               </div>
@@ -117,6 +184,29 @@ class AccountManage extends Component<Props> {
           ))}
         </div>
         <Modal1 onDelete={this.onDelete} />
+        <Modal title={I18n.t('Continue_With_Password')} visible={pwdModelVisible} onClose={this.onCloseModal} DialogClass="pwd-modal-wrapper">
+          <div className="pwd-modal-container">
+            <div className="input-box">
+              <Input
+                value={keyPwd}
+                name="keyPwd"
+                type={hidePassword ? 'password' : 'text'}
+                className="input-address"
+                onChange={this.handleKeyPwdChange}
+                onKeyDown={this.onKeyDown}
+              />
+              <i className={hidePassword ? 'eye-close' : 'eye'} onClick={this.toggleHidePassword} />
+            </div>
+            <div className="btn-box">
+              <Button className="btn-cancel" onClick={this.onCloseModal}>
+                {I18n.t('Cancel')}
+              </Button>
+              <Button className="btn-confirm" disabled={keyPwd == ''} onClick={this.handlePrivateKey}>
+                {loading ? <LoadingImage /> : I18n.t('Confirm')}
+              </Button>
+            </div>
+          </div>
+        </Modal>
       </Fragment>
     )
   }

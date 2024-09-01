@@ -241,13 +241,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case 'CHECK_CREATE_ACCOUNT':
       iostController.checkCreateAccount(message.payload)
       break
+    case 'GET_PRIVATE_KEY':
+      sendResponse({
+        privateKey: IostController.getPrivateKey(message.payload.encodedPrivateKey, message.payload.password),
+      })
+      break
     default:
   }
 })
 
-function aesDecrypt(encrypted, key) {
-  const decipher = crypto.createDecipher('aes192', key)
-  let decrypted = decipher.update(encrypted, 'hex', 'utf8')
-  decrypted += decipher.final('utf8')
-  return decrypted
-}
+// function aesDecrypt(encrypted, key) {
+//   const decipher = crypto.createDecipher('aes192', key)
+//   let decrypted = decipher.update(encrypted, 'hex', 'utf8')
+//   decrypted += decipher.final('utf8')
+//   return decrypted
+// }

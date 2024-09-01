@@ -27,6 +27,7 @@ import {
   TokenDetail,
   AssetManage,
   NftDetail,
+  PrivateKey,
 } from 'components'
 import Settings from 'components/Settings'
 import Popup from 'components/Popup'
@@ -158,6 +159,8 @@ class App extends Component<Props> {
         return <TokenDetail changeLocation={this.changeLocation} />
       case '/nftDetail':
         return <NftDetail changeLocation={this.changeLocation} />
+      case '/privateKey':
+        return <PrivateKey changeLocation={this.changeLocation} />
       case '/assetManage':
         return <AssetManage changeLocation={this.changeLocation} />
     }

@@ -39,6 +39,22 @@ class Account extends Component<Props> {
 
   componentDidMount() {
     this.init()
+    // user.getUsers().then(accounts => {
+    //   user.getLockPassword().then(password => {
+    //     user.getPrivateKey(accounts[0].privateKey, password).then(data => console.log(data))
+    //     const encodedPrivateKey = utils.aesDecrypt(accounts[0].privateKey, password)
+    //     console.log(encodedPrivateKey)
+    //   })
+    // })
+    // user.getPrivateKey().then(data => console.log(data))
+    // const en_password = await user.getEnPassword()
+    // const _password = hash.sha256().update(currentPwd).digest('hex')
+    // if(_password === en_password){}
+    // user.getLockPassword().then(password => {
+    //   user.getPrivateKey(accounts[0].privateKey, password).then(data => console.log(data))
+    //   // const encodedPrivateKey = utils.aesDecrypt(accounts[0].privateKey, password)
+    //   // console.log(encodedPrivateKey)
+    // })
   }
 
   init = async () => {

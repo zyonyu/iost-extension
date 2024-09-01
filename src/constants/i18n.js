@@ -183,6 +183,14 @@ const enTranslation = {
   ChangeNode_Add_Custom_Node: 'Add Custom Node',
   ChangeNode_Enter_Address: 'Please Enter Address',
   ChangeNode_Confirm: 'Confirm',
+
+  Cancel: 'Cancel',
+  Confirm: 'Confirm',
+  Continue_With_Password: 'Enter your password to continue',
+  Account: 'Account',
+  Show_Private_Key: 'Show private key',
+  Show_Private_Key_Warning:
+    'Warning: Never disclose your private key. Private key has right to access any assets in the wallet. Please keep it safe; it cannot be recovered if lost',
 }
 
 //   "Transfer_Balance": "余额：%{num} %{token}",
@@ -376,6 +384,13 @@ const zhTranslation = {
   ChangeNode_Add_Custom_Node: '添加自定义节点',
   ChangeNode_Enter_Address: '请输入地址',
   ChangeNode_Confirm: '确定',
+
+  Cancel: '取消',
+  Confirm: '确认',
+  Continue_With_Password: '输入密码以继续',
+  Account: '账号',
+  Show_Private_Key: '显示私钥',
+  Show_Private_Key_Warning: '警告：切勿泄露私钥，获得了私钥就等于拥有了钱包里的任何资产，请妥善保管，一旦丢失将无法找回',
 }
 
 const koTranslation = {
@@ -564,6 +579,14 @@ const koTranslation = {
   ChangeNode_Add_Custom_Node: '커스텀 노드 추가',
   ChangeNode_Enter_Address: '주소를 입력해주세요',
   ChangeNode_Confirm: '컨펌',
+
+  Cancel: '취소',
+  Confirm: '확인',
+  Continue_With_Password: '계속하려면 비밀번호를 입력하세요',
+  Account: '계정',
+  Show_Private_Key: '프라이빗키 표시',
+  Show_Private_Key_Warning:
+    '경고: 프라이빗키를 절대 노출하지 마십시오. 프라이빗키를 소유하게 되면 지갑 안의 모든 자산을 소유할 수 있습니다. 안전하게 보관해 주십시오. 한 번 잃어버리면 복구할 수 없습니다',
 }
 
 const jaTranslation = {
@@ -751,6 +774,14 @@ const jaTranslation = {
   ChangeNode_Add_Custom_Node: 'カスタムノードの追加',
   ChangeNode_Enter_Address: 'アドレスを入力してください',
   ChangeNode_Confirm: '確定',
+
+  Cancel: 'キャンセル',
+  Confirm: '確定',
+  Continue_With_Password: '続行するためにパスワードを入力してください',
+  Account: 'アカウント',
+  Show_Private_Key: '秘密鍵を表示',
+  Show_Private_Key_Warning:
+    '警告：秘密鍵を絶対に他人へ開示しないでください。秘密鍵はウォレット内のすべての資産にアクセスする権利を持っています。秘密鍵は非常に重要ですので、安全に保管してください。一度失われると、復元することはできません',
 }
 
 export default {

@@ -91,6 +91,19 @@ export const user = {
     },(res)=> {
       resolve(res)
     })
+  }),
+
+  getPrivateKey: (password, encodedPrivateKey) => new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({
+      action: 'GET_PRIVATE_KEY',
+      payload: {
+        password,
+        encodedPrivateKey
+      },
+    },(res)=> {
+      resolve(res)
+    })
+    
   })
 
 

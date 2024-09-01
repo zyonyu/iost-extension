@@ -31,6 +31,7 @@ import WhiteList from './WhiteList'
 import TokenDetail from './TokenDetail'
 import NftDetail from './NftDetail'
 import AssetManage from './AssetManage'
+import PrivateKey from './PrivateKey'
 
 export {
   Header,
@@ -66,4 +67,5 @@ export {
   TokenDetail,
   AssetManage,
   NftDetail,
+  PrivateKey,
 }

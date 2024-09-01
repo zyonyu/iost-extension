@@ -1,0 +1,64 @@
+@import 'colors.scss';
+
+.privateKey-wrapper{
+  position: relative;
+  width: 100%;
+  height: 540px;
+  background-color: $gray;
+  padding-top: 40px;
+  padding: 10px 20px;
+  overflow: auto;
+  .alert{
+    background-color: #feebc8;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+  }
+  .privateKey-box{
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 4px;
+    .privateKey-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .privateKey-content{}
+  }
+  .eye{
+    background-image: url("/static/images/eye.png");
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: 20px 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .eye-close{
+    background-image: url("/static/images/eye-close.png");
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: 20px 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    padding: 4px;
+
+  }
+  .copy {
+    background-image: url("/static/images/copy-new.png");
+    margin-left: 5px;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-size: 20px 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    padding: 4px;
+  }
+}

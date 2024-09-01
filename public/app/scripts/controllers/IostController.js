@@ -111,5 +111,10 @@ function aesDecrypt(encrypted, key) {
   return decrypted
 }
 
+function getPrivateKey(password, encodedPrivateKey) {
+  return aesDecrypt(encodedPrivateKey, password)
+}
+
 module.exports = iost
 module.exports.iostInstance = iost.iost
+module.exports.getPrivateKey = getPrivateKey
