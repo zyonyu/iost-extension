@@ -84,7 +84,12 @@ class Index extends Component<Props> {
         const nodeRpc = await utils.getCurrentNode(account)
 
         iost.changeNetwork(nodeRpc)
-        const { balance, frozen_balances, gas_info, ram_info } = await iost.rpc.blockchain.getAccountInfo(account.name)
+        const {
+          balance_info: { amount_readable: balance },
+          frozen_balances,
+          gas_info,
+          ram_info,
+        } = await iost.rpc.blockchain.getAccountInfo(account.name)
         const frozenAmount = frozen_balances.reduce((prev, next) => ((prev += next.amount), prev), 0)
         this.setState({
           amount: balance,
@@ -275,7 +280,7 @@ class TokenContent extends Component<Props> {
 
   getTokenBalance = async () => {
     const { symbol } = this.props
-    const { balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), symbol)
+    const { amount_readable: balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), symbol)
     this.setState({
       isLoading: false,
       balance,

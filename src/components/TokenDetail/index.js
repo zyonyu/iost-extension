@@ -56,7 +56,7 @@ class TokenDetail extends Component<Props> {
       .then(([balance, fullName]) => {
         this.setState({
           isLoading: false,
-          balance: balance.balance,
+          balance: balance.balance.amount_readable,
           fullName: fullName.full_name,
         })
       })

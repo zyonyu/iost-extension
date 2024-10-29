@@ -15,6 +15,7 @@ import ui from 'utils/ui'
 import utils from 'utils'
 import user from 'utils/user'
 import token, { defaultAssets } from 'utils/token'
+import Decimal from 'decimal.js'
 
 import LoadingImage from 'components/LoadingImage'
 
@@ -90,7 +91,7 @@ class Index extends Component<Props> {
     return new Promise((resolve, reject) => {
       iost.rpc.blockchain
         .getAccountInfo(iost.account.getID())
-        .then(({ balance, frozen_balances, gas_info, ram_info }) => {
+        .then(({ balance_info: { amount_readable: balance }, frozen_balances, gas_info, ram_info }) => {
           const frozenAmount = frozen_balances.reduce((prev, next) => ((prev += next.amount), prev), 0)
           this.setState({
             frozenAmount,
@@ -115,6 +116,7 @@ class Index extends Component<Props> {
 
   transfer = async () => {
     const { to, amount, iGASPrice, iGASLimit, memo, token, assetsList } = this.state
+    const transferAmount = new Decimal(amount).mul(1000).toNumber()
     const { selectedTokenSymbol } = this.props
     const accountName = iost.account.getID()
     const activeAccount = await user.getActiveAccount()
@@ -143,12 +145,12 @@ class Index extends Component<Props> {
     if (chainId === 1023 && token === 'husd') {
       contract = 'ContractaTTuzpKVGHPUMdojrM88LG8DaWsdN7L1ncnpzQsA4aF'
     }
-    const tx = iost.iost.callABI(contract, 'transfer', [token, accountName, to, amount, memo])
+    const tx = iost.iost.callABI(contract, 'transfer', [token, accountName, to, `${transferAmount}`, memo])
 
     tx.setChainID(chainId)
 
     // tx.addApprove("*", defaultConfig.defaultLimit)
-    tx.addApprove(token, +amount)
+    tx.addApprove(token, transferAmount)
 
     if (iGASPrice) {
       tx.gasRatio = +iGASPrice
@@ -379,10 +381,12 @@ class TokenContent extends Component<Props> {
     this.setState({
       isLoading: true,
     })
-    const { balance } = await iost.rpc.blockchain.getBalance(iost.account.getID(), symbol)
+    const {
+      balance: { amount_readable },
+    } = await iost.rpc.blockchain.getBalance(iost.account.getID(), symbol)
     this.setState({
       isLoading: false,
-      balance,
+      balance: amount_readable,
     })
 
     if (symbol == token) {

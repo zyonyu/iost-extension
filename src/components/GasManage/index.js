@@ -62,7 +62,11 @@ class GasManage extends Component<Props> {
     return new Promise((resolve, reject) => {
       iost.rpc.blockchain.getAccountInfo(iost.account.getID())
       .then(data => {
-        const {gas_info: { current_total, limit, pledged_info }, balance, frozen_balances, } = data
+        const {
+          gas_info: { current_total, limit, pledged_info },
+          balance_info: { amount_readable: balance },
+          frozen_balances,
+        } = data
         this.setState({
           userGasInfo: {
             current_total,
